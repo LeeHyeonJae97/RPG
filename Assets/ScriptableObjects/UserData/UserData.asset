@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fca499a41c6307f47841e1a98a3ba28e, type: 3}
+  m_Name: UserData
+  m_EditorClassIdentifier: 
+  <Nickname>k__BackingField: "\uC774\uD604\uC7AC"
+  stage: 10
+  <Moneys>k__BackingField:
+  - {fileID: 11400000, guid: d42466e2cf77b244eacf09d5bb304e88, type: 2}
+  - {fileID: 11400000, guid: 3060d3e953c0d254f8b73b023762880d, type: 2}
+  - {fileID: 11400000, guid: a7639ca01fc3e7441a72a60cece89ada, type: 2}
+  - {fileID: 11400000, guid: 39668c438c685dc48b3aaef7189ea559, type: 2}
+  _uiEventChannel: {fileID: 11400000, guid: 1991c8500dda45349af8dc3444f23305, type: 2}
+  _alertModalEventChannel: {fileID: 11400000, guid: c3bd7c3ea9111ad4a98620656406334d, type: 2}

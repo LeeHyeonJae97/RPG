@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Stages
+  m_EditorClassIdentifier: 
+  m_GroupName: Stages
+  m_Data:
+    m_SerializedData: []
+  m_GUID: ff6865ce2786c53488610c5443edf846
+  m_SerializeEntries:
+  - m_GUID: 42da4efa8fc6b5548857bddde234aeb2
+    m_Address: Stage_0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Stages
+    m_MainAsset: {fileID: 11400000, guid: 42da4efa8fc6b5548857bddde234aeb2, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 42da4efa8fc6b5548857bddde234aeb2, type: 2}
+  - m_GUID: 89c42a77b465e154192556660092ba4b
+    m_Address: Stage_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: 89c42a77b465e154192556660092ba4b, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 89c42a77b465e154192556660092ba4b, type: 2}
+  - m_GUID: d905e3df08a2a7d4ca72acdce1279f5e
+    m_Address: Stage_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 11400000, guid: d905e3df08a2a7d4ca72acdce1279f5e, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: d905e3df08a2a7d4ca72acdce1279f5e, type: 2}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cd5fe1d35cb9f334b8b3f9d0655bc055, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0e371d9f1b64bee47a00d02f4afa70a3, type: 2}
+    - {fileID: 11400000, guid: 86bea4c5cfab2164e8ab328da0472788, type: 2}

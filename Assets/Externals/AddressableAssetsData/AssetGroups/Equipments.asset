@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Equipments
+  m_EditorClassIdentifier: 
+  m_GroupName: Equipments
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 5e84d53f48551454e8ab5efae0ac2d21
+  m_SerializeEntries:
+  - m_GUID: 1d1e3011cc339ca44b0e6333af9c24f5
+    m_Address: Equipment_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equipments
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e197d86098b32be4383e56cbfc336926
+    m_Address: Equipment_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equipments
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8433dea638168ea4c806603e290caa4b
+    m_Address: Equipment_3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equipments
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 186a65002faa7ae49b9f5794a613c264
+    m_Address: Equipment_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equipments
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 40122fb9b061362408ae3f92eedd534a
+    m_Address: Equipment_0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equipments
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cd5fe1d35cb9f334b8b3f9d0655bc055, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 32b2d99e4755f1c46bc401410f67fc54, type: 2}
+    - {fileID: 11400000, guid: ca0c249a6b1e673429017cc9f05e08d2, type: 2}

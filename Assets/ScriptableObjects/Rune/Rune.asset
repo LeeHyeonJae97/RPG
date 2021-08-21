@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bb5d770c5d2c6f4e8deadf4b8171875, type: 3}
+  m_Name: Rune
+  m_EditorClassIdentifier: 
+  <Id>k__BackingField: 0
+  <Name>k__BackingField: "\uACF5\uACA9\uB825 \uB8EC"
+  <Preview>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <Star>k__BackingField: 0
+  <ResalePrice>k__BackingField: 0
+  <DisassembleOutputAmountRange>k__BackingField:
+    <Min>k__BackingField: 0
+    <Max>k__BackingField: 0
+  <Type>k__BackingField: 0
+  <Buffs>k__BackingField:
+  - <StatName>k__BackingField: "\uBB3C\uB9AC\uACF5\uACA9\uB825"
+    <Type>k__BackingField: 0
+    <Value>k__BackingField: 100
+  <EnchantSuccessPercent>k__BackingField: 70

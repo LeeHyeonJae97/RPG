@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Relics
+  m_EditorClassIdentifier: 
+  m_GroupName: Relics
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a3eedf4d7626d9c4694b52fe543888b8
+  m_SerializeEntries:
+  - m_GUID: b077a665bf065574586756a8af0f5503
+    m_Address: Relic_Boss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: b077a665bf065574586756a8af0f5503, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: b077a665bf065574586756a8af0f5503, type: 2}
+  - m_GUID: 03dff2f3d999c2e40b1c1ea7ab362eee
+    m_Address: Relic_Enchant
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: 03dff2f3d999c2e40b1c1ea7ab362eee, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 03dff2f3d999c2e40b1c1ea7ab362eee, type: 2}
+  - m_GUID: e898cc5dff0e4744392b19da4f7d440c
+    m_Address: Relic_Equipment
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: e898cc5dff0e4744392b19da4f7d440c, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: e898cc5dff0e4744392b19da4f7d440c, type: 2}
+  - m_GUID: 51ac7e213f867c943ae73c4c875d8791
+    m_Address: Relic_Exp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: 51ac7e213f867c943ae73c4c875d8791, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 51ac7e213f867c943ae73c4c875d8791, type: 2}
+  - m_GUID: f5a2e6aa9a64f024f9f64f166a66b9ea
+    m_Address: Relic_GameSpeed
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: f5a2e6aa9a64f024f9f64f166a66b9ea, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: f5a2e6aa9a64f024f9f64f166a66b9ea, type: 2}
+  - m_GUID: 77a4dede04c5c8646972a5e3b96b4aed
+    m_Address: Relic_Apt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: 77a4dede04c5c8646972a5e3b96b4aed, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 77a4dede04c5c8646972a5e3b96b4aed, type: 2}
+  - m_GUID: e48064755f40a9a49aa4c8eae26d8fd1
+    m_Address: Relic_Upgrade
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Relics
+    m_MainAsset: {fileID: 11400000, guid: e48064755f40a9a49aa4c8eae26d8fd1, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: e48064755f40a9a49aa4c8eae26d8fd1, type: 2}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cd5fe1d35cb9f334b8b3f9d0655bc055, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9a12df0097d02d34f92fe9e335dcd1f3, type: 2}
+    - {fileID: 11400000, guid: b7a1243b176aafe48a94e0fd8aa393ef, type: 2}
