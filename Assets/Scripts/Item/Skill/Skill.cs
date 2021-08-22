@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Skill : IEquippable, IUpgradable, IDisasemblable
 {
     public string Id { get; private set; }
-    public int Level { get; private set; }
-    public SkillSO Info { get; private set; }
+    [field: SerializeField] public int Level { get; private set; }
+    [field: SerializeField] public SkillSO Info { get; private set; }
     public SkillBuff[] Buffs { get; private set; }
 
     public bool IsEquipped
@@ -25,7 +26,7 @@ public class Skill : IEquippable, IUpgradable, IDisasemblable
     public int[] CombatPositionIndices { get; private set; } = new int[5];
     public int[] SlotIndices { get; private set; } = new int[5];
 
-    public float curCooldown;
+    [HideInInspector] public float curCooldown;
 
     public string Description
     {
@@ -106,8 +107,9 @@ public class Skill : IEquippable, IUpgradable, IDisasemblable
         return usable;
     }
 
-    public virtual void Use(Dictionary<string, Stat> statDic, GetTarget getTarget)
+    public virtual void Use(CombatantStat[] Stats, GetTarget getTarget)
     {
+
     }
 
     public void Reset()

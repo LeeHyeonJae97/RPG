@@ -36,11 +36,11 @@ public class Equipment : IEquippable, IUpgradable, IEnchantable, IDisasemblable
     {
         get
         {
-            string str = $"{Buffs[0].StatName} {Buffs[0].Value}%";
+            string str = $"{Buffs[0].Info.Type} {Buffs[0].Value}%";
             for (int i = 1; i < Buffs.Length; i++)
             {
                 str += "\n";
-                str += $"{Buffs[i].StatName} {Buffs[i].Value}%";
+                str += $"{Buffs[i].Info.Type} {Buffs[i].Value}%";
             }
 
             return str;
@@ -51,13 +51,13 @@ public class Equipment : IEquippable, IUpgradable, IEnchantable, IDisasemblable
     {
         get
         {
-            string str = $"{Buffs[0].StatName} {Buffs[0].Value} {Info.Buffs[0].GetValue(Level + 1)}";
-            if (Buffs[0].Type == CalculationType.Percent) str += "%";
+            string str = $"{Buffs[0].Info.Type} {Buffs[0].Value} {Info.Buffs[0].GetValue(Level + 1)}";
+            if (Buffs[0].Info.CalType == CalculationType.Percent) str += "%";
             for (int i = 1; i < Buffs.Length; i++)
             {
                 str += "\n";
-                str += $"{Buffs[i].StatName} {Buffs[i].Value} {Info.Buffs[0].GetValue(Level + 1)}";
-                if (Buffs[i].Type == CalculationType.Percent) str += "%";
+                str += $"{Buffs[i].Info.Type} {Buffs[i].Value} {Info.Buffs[0].GetValue(Level + 1)}";
+                if (Buffs[i].Info.CalType == CalculationType.Percent) str += "%";
             }
 
             return str;
@@ -70,13 +70,13 @@ public class Equipment : IEquippable, IUpgradable, IEnchantable, IDisasemblable
         {
             if (EnchantedBuffs.Count == 0) return "";
 
-            string str = $"{EnchantedBuffs[0].StatName} {EnchantedBuffs[0].Value}";
-            if (EnchantedBuffs[0].Type == CalculationType.Percent) str += "%";
+            string str = $"{EnchantedBuffs[0].Type} {EnchantedBuffs[0].Value}";
+            if (EnchantedBuffs[0].CalType == CalculationType.Percent) str += "%";
             for (int i = 1; i < EnchantedBuffs.Count; i++)
             {
                 str += "\n";
-                str += $"{EnchantedBuffs[i].StatName} {EnchantedBuffs[i].Value}";
-                if (EnchantedBuffs[i].Type == CalculationType.Percent) str += "%";
+                str += $"{EnchantedBuffs[i].Type} {EnchantedBuffs[i].Value}";
+                if (EnchantedBuffs[i].CalType == CalculationType.Percent) str += "%";
             }
 
             return str;

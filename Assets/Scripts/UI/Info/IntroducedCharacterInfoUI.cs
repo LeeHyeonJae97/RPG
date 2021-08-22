@@ -44,6 +44,6 @@ public class IntroducedCharacterInfoUI : MonoBehaviour
             Debug.LogError("Error");
 
         for (int i = 0; i < _statTexts.Length; i++)
-            _statTexts[i].text = stats[i].StatName + "    " + stats[i].Value;
+            _statTexts[i].text = $"{(StatType)i}    {stats[i].Value}";
     }
 }

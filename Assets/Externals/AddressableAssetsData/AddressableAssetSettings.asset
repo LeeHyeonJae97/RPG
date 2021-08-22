@@ -37,6 +37,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee8d584e5dd2622479886faa02b2d8a8, type: 2}
   - {fileID: 11400000, guid: 5580b2b128f66ed4b8274a69184ab34d, type: 2}
   - {fileID: 11400000, guid: b3190b16bb1616a489470e8fa27a32e1, type: 2}
+  - {fileID: 11400000, guid: 37a06e239c746dd4c84970a2314c87f3, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -87,6 +88,7 @@ MonoBehaviour:
     - Stage_0
     - Stage_1
     - Stage_2
+    - CharacterPreview
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 5d79fb5f986c5f543a087a6e18898b71, type: 2}

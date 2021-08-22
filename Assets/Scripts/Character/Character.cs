@@ -25,7 +25,7 @@ public class Character : IEquippable
         }
     }
     public int StatPoint { get; private set; }
-    public Dictionary<string, CharacterStat> StatDic { get; private set; } = new Dictionary<string, CharacterStat>();
+    public CharacterStat[] Stats;
 
     public bool IsEquipped
     {
@@ -45,25 +45,15 @@ public class Character : IEquippable
 
     // NOTE :
     // 수정 필요
-    public Character(string characterName, int level)
+    public Character(string characterName, Sprite preview, CharacterStat[] stats)
     {
-        Name = characterName;
-        Level = level;
-
-        for (int i = 0; i < CombatPositionIndices.Length; i++)
-            CombatPositionIndices[i] = -1;
-    }
-
-    // NOTE :
-    // 수정 필요
-    public Character(string characterName, CharacterStat[] stats)
-    {
+        Id = "";
         Name = characterName;
         Level = 1;
+        Preview = preview;
         StatPoint = 99;
 
-        for (int i = 0; i < stats.Length; i++)
-            StatDic.Add(stats[i].StatName, stats[i]);
+        Stats = stats;
 
         for (int i = 0; i < CombatPositionIndices.Length; i++)
             CombatPositionIndices[i] = -1;
@@ -79,10 +69,10 @@ public class Character : IEquippable
         CombatPositionIndices[presetIndex] = -1;
     }
 
-    public void InvestStatPoint(string statName)
+    public void InvestStatPoint(StatType type)
     {
         StatPoint--;
-        StatDic[statName].Invested();
+        Stats[(int)type].Invested();
     }
 
     public void Equipped(int presetIndex, int combatPositionIndex, int slotIndex) { }

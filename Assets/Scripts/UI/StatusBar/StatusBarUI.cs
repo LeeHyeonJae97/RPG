@@ -35,6 +35,8 @@ public class StatusBarUI : MonoBehaviour
         _stageText.text = $"STAGE {userData.stage}";
         for (int i = 0; i < userData.Moneys.Length; i++)
         {
+            Debug.Log(userData.Moneys[i].amount);
+
             _moneyIcons[i].sprite = userData.Moneys[i].Icon;
             _moneyTexts[i].text = userData.Moneys[i].amount.ToString();
         }

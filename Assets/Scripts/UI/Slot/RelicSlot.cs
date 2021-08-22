@@ -16,6 +16,6 @@ public class RelicSlot : MonoBehaviour
         _previewImage.sprite = relic.Preview;
         _nameText.text = relic.Name;
         _amountText.text = $"{relic.Amount} / {relic.MaxAmount}";
-        _buffText.text = $"{relic.Buff.StatName} {relic.Buff.Value}% 증가";
+        _buffText.text = $"{relic.Buff.Type} {relic.Buff.Value}% 증가";
     }
 }

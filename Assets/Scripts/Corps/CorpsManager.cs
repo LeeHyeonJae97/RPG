@@ -62,7 +62,7 @@ public class CorpsManager : MonoBehaviour
     private int _selectedCombatPositionIndex;
     private Combatant SelectedCombatant => _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
 
-    private int _selectedSkillSlotIndex;    
+    private int _selectedSkillSlotIndex;
     private int _selectedEquipmentSlotIndex;
 
     private int _selectedCharacterIndex;
@@ -117,11 +117,17 @@ public class CorpsManager : MonoBehaviour
 
     public void JoinCombat()
     {
+        if (!_corps.Joinable(_selectedPresetIndex))
+        {
+            _alertModalEventChannel.onEventRaised?.Invoke("참가 가능한 전투원이 없습니다.");
+            return;
+        }
+
         _combatManager.Joined(_corps.GetCombatants(_selectedPresetIndex));
         _corps.joinedPresetIndex = _selectedPresetIndex;
 
         _uiEventChannel.updatePresetInfoUI?.Invoke(true);
-        _uiEventChannel.updateCombatantInfoUI?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+        _uiEventChannel.updateCombatantInfoUI?.Invoke(SelectedCombatant);
 
         // NOTE :
         // 전투 재시작
@@ -135,7 +141,7 @@ public class CorpsManager : MonoBehaviour
         if(index == _selectedPresetIndex)
         {
             _uiEventChannel.updatePresetInfoUI?.Invoke(true);
-            _uiEventChannel.updateCombatantInfoUI?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+            _uiEventChannel.updateCombatantInfoUI?.Invoke(SelectedCombatant);
         }
 
         // NOTE :
@@ -159,18 +165,15 @@ public class CorpsManager : MonoBehaviour
 
     public void UpdateCombatantInfoUI()
     {
-        _uiEventChannel.updateCombatantInfoUI?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+        _uiEventChannel.updateCombatantInfoUI?.Invoke(SelectedCombatant);
     }
 
     public void SelectCharacterSlot()
     {
-        if (CheckJoined())
-            return;
-
         switch (_state)
         {
             case State.Idle:
-                if (_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex].IsCharacterEquipped)
+                if (SelectedCombatant.IsCharacterEquipped)
                 {
                     _confirmModalEventChannel.show?.Invoke("캐릭터를 해제하시겠습니까?", () => ReleaseCharacter());
                 }
@@ -183,9 +186,7 @@ public class CorpsManager : MonoBehaviour
                 break;
 
             case State.ShowCharacterInfo:
-                bool success = EquipCharacter();
-                if (success)
-                    _uiEventChannel.updateCharacterInfoUI?.Invoke();
+                if (EquipCharacter()) _uiEventChannel.updateCharacterInfoUI?.Invoke();
                 _cutoutEventChannel.hide?.Invoke();
                 break;
         }
@@ -193,32 +194,26 @@ public class CorpsManager : MonoBehaviour
 
     private bool EquipCharacter()
     {
-        Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
-        Character character = _characterInventory.Items[_selectedCharacterIndex];
-
-        int combatPositionIndex = character.CombatPositionIndices[_selectedPresetIndex];
+        int combatPositionIndex = SelectedCharacter.CombatPositionIndices[_selectedPresetIndex];
         if (combatPositionIndex != -1)
         {
             if (combatPositionIndex == _selectedCombatPositionIndex)
-            {
-                _alertModalEventChannel.onEventRaised?.Invoke("이미 해당 포지션에 장착 중입니다.");
                 return false;
-            }
 
             _corps.Combatants[_selectedPresetIndex, combatPositionIndex].ReleaseCharacter();
         }
-        if (combatant.IsCharacterEquipped)
+        if (SelectedCombatant.IsCharacterEquipped)
         {
-            Character replaced = combatant.ReleaseCharacter();
+            Character replaced = SelectedCombatant.ReleaseCharacter();
             replaced.Released(_selectedPresetIndex);
 
             _uiEventChannel.updateCharacterSlot?.Invoke(_characterInventory.Items.IndexOf(replaced), replaced);
         }
 
-        combatant.EquipCharacter(character);
-        character.Equipped(_selectedPresetIndex, _selectedCombatPositionIndex);
+        SelectedCombatant.EquipCharacter(SelectedCharacter);
+        SelectedCharacter.Equipped(_selectedPresetIndex, _selectedCombatPositionIndex);
 
-        _uiEventChannel.updateCharacterSlot?.Invoke(_selectedCharacterIndex, character);
+        _uiEventChannel.updateCharacterSlot?.Invoke(_selectedCharacterIndex, SelectedCharacter);
 
         return true;
     }
@@ -229,7 +224,13 @@ public class CorpsManager : MonoBehaviour
         {
             case State.Idle:
                 {
-                    Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
+                    if (!_corps.UnJoinable(_selectedPresetIndex, _selectedCombatPositionIndex))
+                    {
+                        _alertModalEventChannel.onEventRaised?.Invoke("최소 한명은 전투에 참가하고 있어야합니다.");
+                        return;
+                    }
+
+                    Combatant combatant = SelectedCombatant;
                     Character character = combatant.ReleaseCharacter();
                     character.Released(_selectedPresetIndex);
 
@@ -240,15 +241,22 @@ public class CorpsManager : MonoBehaviour
 
             case State.ShowCharacterInfo:
                 {
-                    Character character = _characterInventory.Items[_selectedCharacterIndex];
+                    Character character = SelectedCharacter;
                     for (int i = 0; i < character.CombatPositionIndices.Length; i++)
                     {
                         int combatPositionIndex = character.CombatPositionIndices[i];
                         if (combatPositionIndex != -1)
                         {
-                            Combatant combatant = _corps.Combatants[i, character.CombatPositionIndices[i]];
-                            combatant.ReleaseCharacter();
-                            character.Released(i);
+                            if (!_corps.UnJoinable(i, combatPositionIndex))
+                            {
+                                _alertModalEventChannel.onEventRaised?.Invoke("최소 한명은 전투에 참가하고 있어야합니다.");
+                            }
+                            else
+                            {
+                                Combatant combatant = _corps.Combatants[i, character.CombatPositionIndices[i]];
+                                combatant.ReleaseCharacter();
+                                character.Released(i);
+                            }
                         }
                     }
 
@@ -260,13 +268,10 @@ public class CorpsManager : MonoBehaviour
 
     public void SelectEquipmentSlot(int index)
     {
-        if (CheckJoined())
-            return;
-
         switch (_state)
         {
             case State.Idle:
-                if (_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex].IsEquipmentEquippedAt(index))
+                if (SelectedCombatant.IsEquipmentEquippedAt(index))
                 {
                     _selectedEquipmentSlotIndex = index;
                     _confirmModalEventChannel.show?.Invoke("장비를 해제하시겠습니까?", () => ReleaseEquipment());
@@ -287,7 +292,7 @@ public class CorpsManager : MonoBehaviour
 
             case State.ShowEquipmentInfo:
                 _selectedEquipmentSlotIndex = index;
-                EquipEquipment();
+                if (EquipEquipment()) _uiEventChannel.updateEquipmentInfoUI?.Invoke();
                 _cutoutEventChannel.hide?.Invoke();
                 break;
         }
@@ -295,7 +300,7 @@ public class CorpsManager : MonoBehaviour
 
     public void LongPressEquipmentlSlot(int index)
     {
-        Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
+        Combatant combatant = SelectedCombatant;
         if (combatant.IsEquipmentEquippedAt(index))
             _equipmentTooltipEventChannel.show?.Invoke(combatant.Equipments[index]);
     }
@@ -305,11 +310,18 @@ public class CorpsManager : MonoBehaviour
         _equipmentTooltipEventChannel.hide?.Invoke();
     }
 
-    public void EquipEquipment()
+    public bool EquipEquipment()
     {
-        //Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
-        //Equipment equipment = _equipmentInventory.Items[_selectedEquipmentIndex];
+        int combatPositionIndex = SelectedEquipment.CombatPositionIndices[_selectedPresetIndex];
+        int slotIndex = SelectedEquipment.SlotIndices[_selectedPresetIndex];
 
+        if (combatPositionIndex != -1 && slotIndex != -1)
+        {
+            if (combatPositionIndex == _selectedCombatPositionIndex && slotIndex == _selectedEquipmentSlotIndex)
+                return false;
+
+            _corps.Combatants[_selectedPresetIndex, combatPositionIndex].ReleaseEquipment(slotIndex);
+        }
         if (SelectedCombatant.IsEquipmentEquippedAt(_selectedEquipmentSlotIndex))
         {
             Equipment replaced = SelectedCombatant.ReleaseEquipment(_selectedEquipmentSlotIndex);
@@ -321,6 +333,8 @@ public class CorpsManager : MonoBehaviour
         SelectedEquipment.Equipped(_selectedPresetIndex, _selectedCombatPositionIndex, _selectedEquipmentSlotIndex);
 
         _uiEventChannel.updateEquipmentSlot?.Invoke(_selectedEquipmentIndex, SelectedEquipment);
+
+        return true;
     }
 
     public void ReleaseEquipment()
@@ -329,7 +343,7 @@ public class CorpsManager : MonoBehaviour
         {
             case State.Idle:
                 {
-                    Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
+                    Combatant combatant = SelectedCombatant;
                     Equipment equipment = combatant.ReleaseEquipment(_selectedEquipmentSlotIndex);
                     equipment.Released(_selectedPresetIndex);
 
@@ -340,7 +354,7 @@ public class CorpsManager : MonoBehaviour
 
             case State.ShowEquipmentInfo:
                 {
-                    Equipment equipment = _equipmentInventory.Items[_selectedEquipmentIndex];
+                    Equipment equipment = SelectedEquipment;
                     for (int i = 0; i < equipment.CombatPositionIndices.Length; i++)
                     {
                         int combatPositionIndex = equipment.CombatPositionIndices[i];
@@ -360,13 +374,10 @@ public class CorpsManager : MonoBehaviour
 
     public void SelectSkillSlot(int index)
     {
-        if (CheckJoined())
-            return;
-
         switch (_state)
         {
             case State.Idle:
-                if (_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex].IsSkillEquippedAt(index))
+                if (SelectedCombatant.IsSkillEquippedAt(index))
                 {
                     _selectedSkillSlotIndex = index;
                     _confirmModalEventChannel.show?.Invoke("스킬을 해제하시겠습니까?", () => ReleaseSkill());
@@ -387,7 +398,7 @@ public class CorpsManager : MonoBehaviour
 
             case State.ShowSkillInfo:
                 _selectedSkillSlotIndex = index;
-                EquipSkill();
+                if (EquipSkill()) _uiEventChannel.updateSkillInfoUI?.Invoke();
                 _cutoutEventChannel.hide?.Invoke();
                 break;
         }
@@ -395,7 +406,7 @@ public class CorpsManager : MonoBehaviour
 
     public void LongPressSkillSlot(int index)
     {
-        Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
+        Combatant combatant = SelectedCombatant;
         if (combatant.IsSkillEquippedAt(index))
             _skillTooltipEventChannel.show?.Invoke(combatant.Skills[index]);
     }
@@ -405,22 +416,31 @@ public class CorpsManager : MonoBehaviour
         _skillTooltipEventChannel.hide?.Invoke();
     }
 
-    public void EquipSkill()
+    public bool EquipSkill()
     {
-        Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
-        Skill skill = _skillInventory.Items[_selectedSkillIndex];
+        int combatPositionIndex = SelectedSkill.CombatPositionIndices[_selectedPresetIndex];
+        int slotIndex = SelectedSkill.SlotIndices[_selectedPresetIndex];
 
-        if (combatant.IsSkillEquippedAt(_selectedSkillSlotIndex))
+        if (combatPositionIndex != -1 && slotIndex != -1)
         {
-            Skill replaced = combatant.ReleaseSkill(_selectedSkillSlotIndex);
+            if (combatPositionIndex == _selectedCombatPositionIndex && slotIndex == _selectedSkillSlotIndex)
+                return false;
+
+            _corps.Combatants[_selectedPresetIndex, combatPositionIndex].ReleaseSkill(slotIndex);
+        }
+        if (SelectedCombatant.IsSkillEquippedAt(_selectedSkillSlotIndex))
+        {
+            Skill replaced = SelectedCombatant.ReleaseSkill(_selectedSkillSlotIndex);
             replaced.Released(_selectedPresetIndex);
 
             _uiEventChannel.updateSkillSlot?.Invoke(_skillInventory.Items.IndexOf(replaced), replaced);
         }
-        combatant.EquipSkill(_selectedSkillSlotIndex, skill);
-        skill.Equipped(_selectedPresetIndex, _selectedCombatPositionIndex, _selectedSkillSlotIndex);
+        SelectedCombatant.EquipSkill(_selectedSkillSlotIndex, SelectedSkill);
+        SelectedSkill.Equipped(_selectedPresetIndex, _selectedCombatPositionIndex, _selectedSkillSlotIndex);
 
-        _uiEventChannel.updateSkillSlot?.Invoke(_selectedSkillIndex, skill);
+        _uiEventChannel.updateSkillSlot?.Invoke(_selectedSkillIndex, SelectedSkill);
+
+        return true;
     }
 
     public void ReleaseSkill()
@@ -429,7 +449,7 @@ public class CorpsManager : MonoBehaviour
         {
             case State.Idle:
                 {
-                    Combatant combatant = _corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex];
+                    Combatant combatant = SelectedCombatant;
                     Skill skill = combatant.ReleaseSkill(_selectedSkillSlotIndex);
                     skill.Released(_selectedPresetIndex);
 
@@ -440,7 +460,7 @@ public class CorpsManager : MonoBehaviour
 
             case State.ShowSkillInfo:
                 {
-                    Skill skill = _skillInventory.Items[_selectedSkillIndex];
+                    Skill skill = SelectedSkill;
                     for (int i = 0; i < skill.CombatPositionIndices.Length; i++)
                     {
                         int combatPositionIndex = skill.CombatPositionIndices[i];
@@ -455,19 +475,6 @@ public class CorpsManager : MonoBehaviour
                     _uiEventChannel.updateSkillSlot?.Invoke(_selectedSkillIndex, skill);
                     break;
                 }
-        }
-    }
-
-    private bool CheckJoined()
-    {
-        if (_selectedPresetIndex == _corps.joinedPresetIndex)
-        {
-            _alertModalEventChannel.onEventRaised?.Invoke("전투에 참가중입니다.");
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
@@ -488,18 +495,9 @@ public class CorpsManager : MonoBehaviour
         // NOTE :
         // 실제로 GC에 의해서 메모리에서 내려가는지 확인 필요
 
-        Character character = _characterInventory.Items[_selectedCharacterIndex];
-        if (!character.IsEquipped)
-        {
-            _characterInventory.Items.RemoveAt(_selectedCharacterIndex);
-            _uiEventChannel.removeCharacterSlot?.Invoke(0, _selectedCharacterIndex);
-
-            DeselectCharacter();
-        }
-        else
-        {
-            _alertModalEventChannel.onEventRaised?.Invoke("장착 중이라 해고할 수 없습니다");
-        }        
+        _characterInventory.Items.RemoveAt(_selectedCharacterIndex);
+        _uiEventChannel.removeCharacterSlot?.Invoke(0, _selectedCharacterIndex);
+        DeselectCharacter();
     }
 
     public void SelectCharacter(Character character)
@@ -515,7 +513,7 @@ public class CorpsManager : MonoBehaviour
             case State.SelectCharacterSlot:
                 _selectedCharacterIndex = _characterInventory.Items.IndexOf(character);
                 EquipCharacter();
-                _uiEventChannel.updateCombatantInfoUI?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+                _uiEventChannel.updateCombatantInfoUI?.Invoke(SelectedCombatant);
                 _cutoutEventChannel.hide?.Invoke();
                 break;
         }
@@ -536,10 +534,10 @@ public class CorpsManager : MonoBehaviour
 
     public void InvestStatPoint(int index)
     {
-        Character character = _characterInventory.Items[_selectedCharacterIndex];
+        Character character = SelectedCharacter;
         if (character.StatPoint > 0)
         {
-            character.InvestStatPoint(Variables.StatNames[index]);
+            character.InvestStatPoint((StatType)index);
             _uiEventChannel.updateCharacterInfoUI?.Invoke();
         }
     }
@@ -576,7 +574,7 @@ public class CorpsManager : MonoBehaviour
             case State.SelectEquipmentSlot:
                 _selectedEquipmentIndex = _equipmentInventory.Items.IndexOf(equipment);
                 EquipEquipment();
-                _uiEventChannel.updateCombatantInfoUI?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+                _uiEventChannel.updateCombatantInfoUI?.Invoke(SelectedCombatant);
                 _cutoutEventChannel.hide?.Invoke();
                 break;
 
@@ -618,7 +616,7 @@ public class CorpsManager : MonoBehaviour
 
     public void TryEquipEquipment()
     {
-        _uiEventChannel.openCorpsInfoUIWithCutout?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+        _uiEventChannel.openCorpsInfoUIWithCutout?.Invoke(SelectedCombatant);
     }
 
     public void SelectEquipmentForUpgrade()
@@ -626,7 +624,7 @@ public class CorpsManager : MonoBehaviour
         _selectedEquipmentForUpgradeIndex = _selectedEquipmentIndex;
         _mainTabEventChannel.onEventRaised?.Invoke((int)MainTab.Smithy);
         _smithyTabEventChannel.onEventRaised?.Invoke((int)SmithyTab.Upgrade);
-        _uiEventChannel.updateUpgradeEquipmentInfoUI?.Invoke(_equipmentInventory.Items[_selectedEquipmentIndex]);
+        _uiEventChannel.updateUpgradeEquipmentInfoUI?.Invoke(SelectedEquipment);
     }
 
     public void SelectEquipmentForEnchant()
@@ -634,7 +632,7 @@ public class CorpsManager : MonoBehaviour
         _selectedEquipmentForEnchantIndex = _selectedEquipmentIndex;
         _mainTabEventChannel.onEventRaised?.Invoke((int)MainTab.Smithy);
         _smithyTabEventChannel.onEventRaised?.Invoke((int)SmithyTab.Enchant);
-        _uiEventChannel.updateEnchantEquipmentInfoUI(_equipmentInventory.Items[_selectedEquipmentIndex]);
+        _uiEventChannel.updateEnchantEquipmentInfoUI(SelectedEquipment);
     }
 
     public void SelectEquipmentForDisassemble()
@@ -643,14 +641,14 @@ public class CorpsManager : MonoBehaviour
         _selectedEquipmentForDisassembleIndex = _selectedEquipmentIndex;
         _mainTabEventChannel.onEventRaised?.Invoke((int)MainTab.Smithy);
         _smithyTabEventChannel.onEventRaised?.Invoke((int)SmithyTab.Disassemble);
-        _uiEventChannel.updateDisassembleInfoUI(_equipmentInventory.Items[_selectedEquipmentIndex].Info);
+        _uiEventChannel.updateDisassembleInfoUI(SelectedEquipment.Info);
     }
 
     public void SellEquipment()
-    {
-        Equipment equipment = _equipmentInventory.Items[_selectedEquipmentForDisassembleIndex];
-        _statusManager.EarnMoney(MoneyType.Gold, equipment.Info.ResalePrice);
+    {        
+        _statusManager.EarnMoney(MoneyType.Gold, SelectedEquipment.Info.ResalePrice);
         RemoveEquipment(_selectedEquipmentIndex);
+        DeselectEquipment();
     }
 
     #endregion
@@ -688,7 +686,7 @@ public class CorpsManager : MonoBehaviour
             case State.SelectSkillSlot:
                 _selectedSkillIndex = _skillInventory.Items.IndexOf(skill);
                 EquipSkill();
-                _uiEventChannel.updateCombatantInfoUI?.Invoke(_corps.Combatants[_selectedPresetIndex, _selectedCombatPositionIndex]);
+                _uiEventChannel.updateCombatantInfoUI?.Invoke(SelectedCombatant);
                 _cutoutEventChannel.hide?.Invoke();
                 break;
 
@@ -732,7 +730,7 @@ public class CorpsManager : MonoBehaviour
         _selectedSkillForUpgradeIndex = _selectedSkillIndex;
         _mainTabEventChannel.onEventRaised?.Invoke((int)MainTab.Smithy);
         _smithyTabEventChannel.onEventRaised?.Invoke((int)SmithyTab.Upgrade);
-        _uiEventChannel.updateUpgradeSkillInfoUI?.Invoke(_skillInventory.Items[_selectedSkillIndex]);
+        _uiEventChannel.updateUpgradeSkillInfoUI?.Invoke(SelectedSkill);
     }
 
     public void SelectSkillForDisassemble()
@@ -746,7 +744,7 @@ public class CorpsManager : MonoBehaviour
 
     public void SellSkill()
     {
-        Skill skill = _skillInventory.Items[_selectedSkillForDisassembleIndex];
+        Skill skill = SelectedSkillForDisassemble;
         _statusManager.EarnMoney(MoneyType.Gold, skill.Info.ResalePrice);
         RemoveSkill(_selectedSkillIndex);
     }
@@ -814,7 +812,7 @@ public class CorpsManager : MonoBehaviour
         _selectedRuneForEnchantIndex = _selectedRuneIndex;
         _mainTabEventChannel.onEventRaised?.Invoke((int)MainTab.Smithy);
         _smithyTabEventChannel.onEventRaised?.Invoke((int)SmithyTab.Enchant);
-        _uiEventChannel.updateEnchantRuneInfoUI?.Invoke(_runeInventory.Items[_selectedRuneForEnchantIndex]);
+        _uiEventChannel.updateEnchantRuneInfoUI?.Invoke(SelectedRunForEnchant);
     }
 
     public void SelectRuneForDisassemble()
@@ -823,12 +821,12 @@ public class CorpsManager : MonoBehaviour
         _selectedRuneForDisassembleIndex = _selectedRuneIndex;
         _mainTabEventChannel.onEventRaised?.Invoke((int)MainTab.Smithy);
         _smithyTabEventChannel.onEventRaised?.Invoke((int)SmithyTab.Disassemble);
-        _uiEventChannel.updateDisassembleInfoUI(_runeInventory.Items[_selectedRuneIndex].Info);
+        _uiEventChannel.updateDisassembleInfoUI(SelectedRune.Info);
     }
 
     public void SellRune()
     {
-        Rune rune = _runeInventory.Items[_selectedRuneForDisassembleIndex];
+        Rune rune = SelectedRuneForDisassemble;
         _statusManager.EarnMoney(MoneyType.Gold, rune.Info.ResalePrice);
         RemoveRune(_selectedRuneIndex);
     }
@@ -841,41 +839,57 @@ public class CorpsManager : MonoBehaviour
 
     public string CharacterName { private get; set; }
     private CharacterStat[] _randomStats;
+    private AsyncOperationHandle<IList<Sprite>> _characterPreviewLoadHandle;
+    private int _characterPreviewIndex;
 
     public void IntroduceCharacter()
     {
-        if (!_statusManager.Affordable(MoneyType.Diamond, Variables.COST_INTRODUCE_CHARACTER)) return;
+        StartCoroutine(IntroduceCharacterCoroutine());
+    }
+
+    public IEnumerator IntroduceCharacterCoroutine()
+    {
+        if (!_statusManager.Affordable(MoneyType.Diamond, Variables.COST_INTRODUCE_CHARACTER)) yield break;
 
         _statusManager.LoseMoney(MoneyType.Diamond, Variables.COST_INTRODUCE_CHARACTER);
 
         // 캐릭터 외형
+        _characterPreviewLoadHandle = Addressables.LoadAssetsAsync<Sprite>("CharacterPreview", null);
+        yield return new WaitUntil(() => _characterPreviewLoadHandle.IsDone);
+
+        _characterPreviewIndex = 0;        
 
         // NOTE :
         // 값의 랜덤 범위가 스탯별로 달라야한다
-        _randomStats = new CharacterStat[Variables.StatNames.Length];
+        _randomStats = new CharacterStat[Variables.STAT_TYPE_COUNT];
         for (int i = 0; i < _randomStats.Length; i++)
-            _randomStats[i] = new CharacterStat(Variables.StatNames[i], Random.Range(3, 10));
+            _randomStats[i] = new CharacterStat(Random.Range(5, 11));
 
-        _uiEventChannel.openIntroducedCharacterInfoUI?.Invoke(null, _randomStats);
+        _uiEventChannel.openIntroducedCharacterInfoUI?.Invoke(_characterPreviewLoadHandle.Result[_characterPreviewIndex], _randomStats);
     }
 
     public void Reintroduce()
     {
-        if (_randomStats != null)
-        {
-            // 캐릭터 외형
+        for (int i = 0; i < _randomStats.Length; i++)
+            _randomStats[i].Value = Random.Range(3, 10);
 
-            for (int i = 0; i < _randomStats.Length; i++)
-                _randomStats[i].Value = Random.Range(3, 10);
+        _uiEventChannel.updateIntroducedCharacterInfoUI?.Invoke(_characterPreviewLoadHandle.Result[_characterPreviewIndex], _randomStats);
+    }
 
-            _uiEventChannel.updateIntroducedCharacterInfoUI?.Invoke(null, _randomStats);
-        }
+    public void SwitchCharacterPreview(bool left)
+    {
+        _characterPreviewIndex = left ? _characterPreviewIndex - 1 : _characterPreviewIndex + 1;
+        _characterPreviewIndex = Mathf.Clamp(_characterPreviewIndex, 0, _characterPreviewLoadHandle.Result.Count - 1);
+
+        _uiEventChannel.updateIntroducedCharacterInfoUI?.Invoke(_characterPreviewLoadHandle.Result[_characterPreviewIndex], _randomStats);
     }
 
     public void Hire()
     {
-        Character character = new Character(CharacterName, _randomStats);
+        Character character = new Character(CharacterName, _characterPreviewLoadHandle.Result[_characterPreviewIndex], _randomStats);
         PickupCharacter(character);
+
+        Addressables.Release(_characterPreviewLoadHandle);
     }
 
     public void MakeEquipments(int count)
@@ -1024,11 +1038,11 @@ public class CorpsManager : MonoBehaviour
             switch (_upgradeState)
             {
                 case UpgradeState.EquipmentSelected:
-                    success = _equipmentInventory.Items[_selectedEquipmentForUpgradeIndex].Upgraded();
+                    success = SelectedEquipmentForUpgrade.Upgraded();
                     break;
 
                 case UpgradeState.SkillSelected:
-                    success = _skillInventory.Items[_selectedSkillForUpgradeIndex].Upgraded();
+                    success = SelectedSkillForUpgrade.Upgraded();
                     break;
 
                 default:
@@ -1087,7 +1101,7 @@ public class CorpsManager : MonoBehaviour
         }
         if (!_statusManager.Affordable(MoneyType.ForEnchant, Variables.COST_ENCHANT)) return;
 
-        Equipment equipment = _equipmentInventory.Items[_selectedEquipmentForEnchantIndex];
+        Equipment equipment = SelectedEquipmentForEnchant;
         if (!equipment.Enchantable)
         {
             _alertModalEventChannel.onEventRaised?.Invoke("더 이상 연성이 불가능합니다.");
@@ -1096,7 +1110,7 @@ public class CorpsManager : MonoBehaviour
 
         _statusManager.LoseMoney(MoneyType.ForEnchant, Variables.COST_ENCHANT);
 
-        Rune rune = _runeInventory.Items[_selectedRuneForEnchantIndex];
+        Rune rune = SelectedRunForEnchant;
 
         bool success = equipment.Enchanted(rune);
         _alertModalEventChannel.onEventRaised?.Invoke(success ? "연성 성공!" : "연성 실패!");
@@ -1144,17 +1158,17 @@ public class CorpsManager : MonoBehaviour
             switch (_disassembleState)
             {
                 case DisassembleState.EquipmentSelected:
-                    amount = _equipmentInventory.Items[_selectedEquipmentForDisassembleIndex].Disassembled();
+                    amount = SelectedEquipmentForDisassemble.Disassembled();
                     RemoveEquipment(_selectedEquipmentForDisassembleIndex);
                     break;
 
                 case DisassembleState.SkillSelected:
-                    amount = _skillInventory.Items[_selectedSkillForDisassembleIndex].Disassembled();
+                    amount = SelectedSkillForDisassemble.Disassembled();
                     RemoveSkill(_selectedSkillForDisassembleIndex);
                     break;
 
                 case DisassembleState.RuneSelected:
-                    amount = _runeInventory.Items[_selectedRuneForDisassembleIndex].Disassembled();
+                    amount = SelectedRuneForDisassemble.Disassembled();
                     RemoveRune(_selectedRuneForDisassembleIndex);
                     break;
 

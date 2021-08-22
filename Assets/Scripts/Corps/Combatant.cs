@@ -8,7 +8,7 @@ public class Combatant
     public Character Character { get; private set; }
     public Equipment[] Equipments { get; private set; } = new Equipment[5];
     public Skill[] Skills { get; private set; } = new Skill[5];
-    public Dictionary<string, CombatantStat> StatDic { get; private set; } = new Dictionary<string, CombatantStat>();
+    public CombatantStat[] Stats { get; private set; } = new CombatantStat[9];
 
     public bool IsJoined { get; private set; }
     public CombatPosition Pos { get; private set; }
@@ -19,9 +19,8 @@ public class Combatant
 
     public Combatant()
     {
-        string[] statNames = Variables.StatNames;
-        for (int i = 0; i < statNames.Length; i++)
-            StatDic.Add(statNames[i], new CombatantStat());
+        for (int i = 0; i < Stats.Length; i++)
+            Stats[i] = new CombatantStat();
     }
 
     public void JoinCombat(CombatPosition pos)
@@ -43,18 +42,16 @@ public class Combatant
     public void EquipCharacter(Character character)
     {
         Character = character;
-        string[] statNames = Variables.StatNames;
-        for (int i = 0; i < statNames.Length; i++)
-            StatDic[statNames[i]].characterStat = character.StatDic[statNames[i]];
+        for (int i = 0; i < Stats.Length; i++)
+            Stats[i].characterStat = character.Stats[i];
     }
 
     public Character ReleaseCharacter()
     {
         Character released = Character;
         Character = null;
-        string[] statNames = Variables.StatNames;
-        for (int i = 0; i < statNames.Length; i++)
-            StatDic[statNames[i]].characterStat = null;
+        for (int i = 0; i < Stats.Length; i++)
+            Stats[i].characterStat = released.Stats[i];
         return released;
     }
 
@@ -64,11 +61,11 @@ public class Combatant
 
         EquipmentBuff[] buffs = equipment.Buffs;
         for (int i = 0; i < buffs.Length; i++)
-            StatDic[buffs[i].StatName].equipmentBuffs.Add(buffs[i]);
+            Stats[(int)buffs[i].Info.Type].equipmentBuffs.Add(buffs[i]);
 
         List<RuneBuff> enchantedBuffs = equipment.EnchantedBuffs;
         for (int i = 0; i < enchantedBuffs.Count; i++)
-            StatDic[enchantedBuffs[i].StatName].equipmentEnchantedBuffs.Add(enchantedBuffs[i]);
+            Stats[(int)enchantedBuffs[i].Type].equipmentEnchantedBuffs.Add(enchantedBuffs[i]);
     }
 
     public Equipment ReleaseEquipment(int index)
@@ -78,11 +75,11 @@ public class Combatant
 
         EquipmentBuff[] buffs = released.Buffs;
         for (int i = 0; i < buffs.Length; i++)
-            StatDic[buffs[i].StatName].equipmentBuffs.Remove(buffs[i]);
+            Stats[(int)buffs[i].Info.Type].equipmentBuffs.Remove(buffs[i]);
 
         List<RuneBuff> enchantedBuffs = released.EnchantedBuffs;
         for (int i = 0; i < enchantedBuffs.Count; i++)
-            StatDic[enchantedBuffs[i].StatName].equipmentEnchantedBuffs.Remove(enchantedBuffs[i]);
+            Stats[(int)enchantedBuffs[i].Type].equipmentEnchantedBuffs.Remove(enchantedBuffs[i]);
 
         return released;
     }
@@ -101,8 +98,7 @@ public class Combatant
 
     public void ResetSkillBuffs()
     {
-        CombatantStat[] stats = StatDic.Values.ToArray();
-        for (int i = 0; i < stats.Length; i++)
-            stats[i].ResetSkillBuffs();
+        for (int i = 0; i < Stats.Length; i++)
+            Stats[i].ResetSkillBuffs();
     }
 }

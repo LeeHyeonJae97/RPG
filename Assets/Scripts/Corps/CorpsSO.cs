@@ -10,6 +10,26 @@ public class CorpsSO : ScriptableObject
 
     public Combatant[,] Combatants { get; private set; } = new Combatant[5, 3];
 
+    public bool Joinable(int presetIndex)
+    {
+        Combatant[] combatants = GetCombatants(presetIndex);
+        return combatants[0].IsCharacterEquipped || combatants[1].IsCharacterEquipped || combatants[2].IsCharacterEquipped;
+    }
+
+    public bool UnJoinable(int presetIndex, int combatPositionIndex)
+    {
+        if (presetIndex != joinedPresetIndex) return true;
+
+        Combatant[] combatants = GetCombatants(presetIndex);
+        for (int i = 0; i < combatants.Length; i++)
+        {
+            if (i != combatPositionIndex && combatants[i].IsCharacterEquipped)
+                return true;
+        }
+
+        return false;
+    }
+
     public Combatant[] GetCombatants(int presetIndex)
     {
         return new Combatant[] { Combatants[presetIndex, 0], Combatants[presetIndex, 1], Combatants[presetIndex, 2] };

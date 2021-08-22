@@ -9,11 +9,10 @@ public class CharacterInventorySO : BaseInventorySO<Character>
     public override void Load()
     {
         // 최초에만 실행
-        CharacterStat[] stats = new CharacterStat[Variables.StatNames.Length];
+        CharacterStat[] stats = new CharacterStat[Variables.STAT_TYPE_COUNT];
         for (int i = 0; i < stats.Length; i++)
-            stats[i] = new CharacterStat(Variables.StatNames[i], Random.Range(3, 10));
-
-        Character character = new Character("모험가", stats);
+            stats[i] = new CharacterStat(Random.Range(5, 11));
+        Character character = new Character("모험가", null, stats);
         character.Equipped(0, 0);
         Items.Add(character);
     }

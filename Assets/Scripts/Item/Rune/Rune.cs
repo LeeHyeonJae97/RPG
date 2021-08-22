@@ -12,11 +12,11 @@ public class Rune : IDisasemblable
     {
         get
         {
-            string str = $"{Buffs[0].StatName} {Buffs[0].Value}%";
+            string str = $"{Buffs[0].Type} {Buffs[0].Value}%";
             for (int i = 1; i < Buffs.Length; i++)
             {
                 str += "\n";
-                str += $"{Buffs[i].StatName} {Buffs[i].Value}%";
+                str += $"{Buffs[i].Type} {Buffs[i].Value}%";
             }
 
             return str;

@@ -14,6 +14,6 @@ public class UserDataSO : ScriptableObject
         // 세이브 파일 로드
 
         for (int i = 0; i < Moneys.Length; i++)
-            Moneys[i].amount = 99999;
+            Moneys[i].amount = 9999;
     }
 }

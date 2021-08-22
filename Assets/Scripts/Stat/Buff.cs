@@ -7,21 +7,14 @@ using Extension;
 public enum CalculationType { Flat = 0, Percent = 1 }
 
 [System.Serializable]
-public class Buff
+public class EquipmentBuff
 {
-    [field: SerializeField] public string StatName { get; protected set; }
-}
-
-[System.Serializable]
-public class EquipmentBuff : Buff
-{
-    public CalculationType Type { get; private set; }
+    public EquipmentBuffInfo Info { get; private set; }
     public float Value { get; private set; }
 
     public EquipmentBuff(EquipmentBuffInfo info, int level)
     {
-        StatName = info.StatName;
-        Type = info.Type;
+        Info = info;
         Value = float.Parse(new DataTable().Compute(string.Format(info.Formula, level), null).ToString());
     }
 
@@ -32,9 +25,10 @@ public class EquipmentBuff : Buff
 }
 
 [System.Serializable]
-public class EquipmentBuffInfo : Buff
+public class EquipmentBuffInfo
 {
-    [field: SerializeField] public CalculationType Type { get; private set; }
+    [field: SerializeField] public StatType Type { get; private set; }
+    [field: SerializeField] public CalculationType CalType { get; private set; }
     [field: SerializeField] public string Formula { get; private set; }
 
     public float GetValue(int level)
@@ -44,15 +38,14 @@ public class EquipmentBuffInfo : Buff
 }
 
 [System.Serializable]
-public class SkillBuff : Buff
+public class SkillBuff
 {
-    public string CoefStatName { get; private set; }
+    public SkillBuffInfo Info { get; private set; }
     public float CoefValue { get; private set; }
 
     public SkillBuff(SkillBuffInfo info, int level)
     {
-        StatName = info.StatName;
-        CoefStatName = info.CoefStatName;
+        Info = info;
         CoefValue = float.Parse(new DataTable().Compute(string.Format(info.Formula, level), null).ToString());
     }
 
@@ -63,9 +56,10 @@ public class SkillBuff : Buff
 }
 
 [System.Serializable]
-public class SkillBuffInfo : Buff
+public class SkillBuffInfo
 {
-    [field: SerializeField] public string CoefStatName { get; private set; }
+    [field: SerializeField] public StatType Type { get; private set; }
+    [field: SerializeField] public StatType CoefStatType { get; protected set; }
     [field: SerializeField] public string Formula { get; private set; }
 
     public float GetValue(int level)
@@ -80,22 +74,24 @@ public class SkillBuffInfo : Buff
 // 인벤토리에도 Stackable하게 저장
 
 [System.Serializable]
-public class RuneBuff : Buff
+public class RuneBuff
 {
-    [field: SerializeField] public CalculationType Type { get; private set; }
+    [field: SerializeField] public StatType Type { get; private set; }
+    [field: SerializeField] public CalculationType CalType { get; private set; }
     [field: SerializeField] public float Value { get; private set; }
 
     public RuneBuff(RuneBuff buff)
     {
-        StatName = buff.StatName;
         Type = buff.Type;
+        CalType = buff.CalType;
         Value = buff.Value;
     }
 }
 
 [System.Serializable]
-public class RelicBuff : Buff
+public class RelicBuff
 {
+    [field: SerializeField] public StatType Type { get; private set; }
     [field: SerializeField] public string Formula { get; private set; }
     public float Value { get; private set; }
 

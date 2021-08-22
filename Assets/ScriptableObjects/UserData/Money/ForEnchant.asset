@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: ForEnchant
   m_EditorClassIdentifier: 
   <MoneyName>k__BackingField: "\uC5F0\uC131\uC7AC\uB8CC"
+  <Type>k__BackingField: 1
   amount: 0
   <Icon>k__BackingField: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}

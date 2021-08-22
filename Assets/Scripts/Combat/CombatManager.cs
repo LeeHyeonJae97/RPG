@@ -85,21 +85,13 @@ public class CombatManager : MonoBehaviour
     }
 
     public void Joined(Combatant[] combatants)
-    {
-        bool joinable = combatants[0].IsCharacterEquipped || combatants[1].IsCharacterEquipped || combatants[2].IsCharacterEquipped;
-
-        if (!joinable)
-        {
-            _alertModalEventChannel.onEventRaised?.Invoke("참가 가능한 전투원이 없습니다.");
-            return;
-        }
-
+    {       
         // 기존의 Combatant 해제
         for (int i = 0; i < _liveCombatants.Length; i++)
         {
             if (!_liveCombatants[i].IsEmpty)
             {
-                _liveCombatants[i].Info.UnjoinCombat();
+                _liveCombatants[i].Combatant.UnjoinCombat();
                 _liveCombatants[i].Reset();
             }
         }
@@ -142,7 +134,7 @@ public class CombatManager : MonoBehaviour
         for (int i = 0; i < _liveCombatants.Length; i++)
         {
             if (!_liveCombatants[i].IsEmpty)
-                _liveCombatants[i].Info.Character.Exp += amount;
+                _liveCombatants[i].Combatant.Character.Exp += amount;
         }
 
         // NOTE :

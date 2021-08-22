@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: CharacterPreview
+  m_EditorClassIdentifier: 
+  m_GroupName: CharacterPreview
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 83cfb7b6a9fdceb44bacdf8a9dea83a4
+  m_SerializeEntries:
+  - m_GUID: 98cadcf20732bb44db8179cecc61ca2e
+    m_Address: Assets/Sprites/Character/mage4_stay_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterPreview
+    m_MainAsset: {fileID: 2800000, guid: 98cadcf20732bb44db8179cecc61ca2e, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 98cadcf20732bb44db8179cecc61ca2e, type: 3}
+  - m_GUID: a86a86569bae2594f98c86c14a718e0e
+    m_Address: Assets/Sprites/Character/mage3_stay_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterPreview
+    m_MainAsset: {fileID: 2800000, guid: a86a86569bae2594f98c86c14a718e0e, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: a86a86569bae2594f98c86c14a718e0e, type: 3}
+  - m_GUID: 5b9fe52d74f1e12449a791c08c107f4b
+    m_Address: Assets/Sprites/Character/mage1_stay_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterPreview
+    m_MainAsset: {fileID: 2800000, guid: 5b9fe52d74f1e12449a791c08c107f4b, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 5b9fe52d74f1e12449a791c08c107f4b, type: 3}
+  - m_GUID: 3de23c4a04bef9440b4b7f3507b86a4c
+    m_Address: Assets/Sprites/Character/mage2_stay_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterPreview
+    m_MainAsset: {fileID: 2800000, guid: 3de23c4a04bef9440b4b7f3507b86a4c, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 3de23c4a04bef9440b4b7f3507b86a4c, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cd5fe1d35cb9f334b8b3f9d0655bc055, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2f90c4ee2ad396749a084c149438ab1f, type: 2}
+    - {fileID: 11400000, guid: a2d16eacf2e0d3041865977277d3e85f, type: 2}

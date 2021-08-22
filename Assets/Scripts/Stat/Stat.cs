@@ -2,19 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Stat
+public class CharacterStat
 {
-    public abstract float Value { get; set; }
-}
+    public float Value { get; set; }
 
-public class CharacterStat : Stat
-{
-    public string StatName { get; private set; }
-    public override float Value { get; set; }
-
-    public CharacterStat(string statName, float value)
+    public CharacterStat(float value)
     {
-        StatName = statName;
         Value = value;
     }
 
@@ -25,14 +18,14 @@ public class CharacterStat : Stat
 }
 
 [System.Serializable]
-public class CombatantStat : Stat
+public class CombatantStat
 {
     public CharacterStat characterStat;
     public List<EquipmentBuff> equipmentBuffs = new List<EquipmentBuff>();
     public List<RuneBuff> equipmentEnchantedBuffs = new List<RuneBuff>();
     public List<float> skillBuffs = new List<float>();
 
-    public override float Value { get { return BaseValue + EquipmentBuffValue + SkillBuffValue; } set { } }
+    public float Value { get { return BaseValue + EquipmentBuffValue + SkillBuffValue; } set { } }
 
     public float BaseValue { get { return characterStat == null ? 0 : characterStat.Value; } }
 
@@ -47,7 +40,7 @@ public class CombatantStat : Stat
             float finalValue = 0;
             for (int i = 0; i < equipmentBuffs.Count; i++)
             {
-                switch (equipmentBuffs[i].Type)
+                switch (equipmentBuffs[i].Info.CalType)
                 {
                     case CalculationType.Flat:
                         finalValue += equipmentBuffs[i].Value;
@@ -60,7 +53,7 @@ public class CombatantStat : Stat
             }
             for (int i = 0; i < equipmentEnchantedBuffs.Count; i++)
             {
-                switch (equipmentEnchantedBuffs[i].Type)
+                switch (equipmentEnchantedBuffs[i].CalType)
                 {
                     case CalculationType.Flat:
                         finalValue += equipmentEnchantedBuffs[i].Value;
@@ -95,13 +88,12 @@ public class CombatantStat : Stat
 }
 
 [System.Serializable]
-public class MonsterStat : Stat
+public class MonsterStat
 {
-    [field: SerializeField] public string StatName { get; private set; }
     [field: SerializeField] public float BaseValue { get; private set; }
     [HideInInspector] public List<float> skillBuffs = new List<float>();
 
-    public override float Value
+    public float Value
     {
         get
         {
@@ -111,7 +103,5 @@ public class MonsterStat : Stat
 
             return value;
         }
-
-        set { }
     }
 }

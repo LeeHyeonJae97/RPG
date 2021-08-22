@@ -66,7 +66,7 @@ public class CharacterInfoUI : BaseInfoUI<Character>
         _expBarFillImage.fillAmount = exp / maxExp;
 
         for (int i = 0; i < _statTexts.Length; i++)
-            _statTexts[i].text =character.StatDic[Variables.StatNames[i]].Value.ToString();
+            _statTexts[i].text =character.Stats[i].Value.ToString();
 
         for (int i = 0; i < _investButtons.Length; i++)
             _investButtons[i].interactable = character.StatPoint > 0;

@@ -70,11 +70,11 @@ public class CorpsInfoUI : MonoBehaviour
         // Stat
         for (int i = 0; i < _statTexts.Length; i++)
         {
-            CombatantStat stat = combatant.StatDic[Variables.StatNames[i]];
+            CombatantStat stat = combatant.Stats[i];
             float baseValue = stat.BaseValue;
             float equipmentBuffValue = stat.EquipmentBuffValue;
             float skillBuffValue = stat.SkillBuffValue;
-            _statTexts[i].text = $"{Variables.StatNames[i]}    {baseValue + equipmentBuffValue + skillBuffValue} " +
+            _statTexts[i].text = $"{(StatType)i}    {baseValue + equipmentBuffValue + skillBuffValue} " +
                 $"({baseValue}+{equipmentBuffValue}+{skillBuffValue})";
         }
     }
