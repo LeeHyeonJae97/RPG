@@ -13,4 +13,16 @@ public class MonsterSO : ScriptableObject
     [field: SerializeField] public Extension.RangeInt OutputExpRange { get; private set; }
     [field: SerializeField] public MoneyType OutputMoneyType { get; private set; }
     [field: SerializeField] public Extension.RangeInt OutputMoneyRange { get; private set; }
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < Skills.Length; i++)
+            Skills[i].Init();
+    }
+
+    public void ResetSkillBuffs()
+    {
+        for (int i = 0; i < Stats.Length; i++)
+            Stats[i].ResetSkillBuffs();
+    }
 }

@@ -6,9 +6,11 @@ using UnityEngine;
 // 메모리에 계속 올려놓고 있을 필요가 없을지도?
 
 [CreateAssetMenu(fileName = "RelicInventory", menuName = "ScriptableObject/Inventory/RelicInventory")]
-public class RelicInventorySO : BaseInventorySO<RelicSO>
+public class RelicInventorySO : ScriptableObject
 {
-    public override void Load()
+    [field:SerializeField] public List<RelicSO> Items { get; protected set; } = new List<RelicSO>();
+
+    public void Load()
     {
         for (int i = 0; i < Items.Count; i++)
         {
@@ -17,7 +19,7 @@ public class RelicInventorySO : BaseInventorySO<RelicSO>
         }
     }
 
-    public override void Save()
+    public void Save()
     {
 
     }

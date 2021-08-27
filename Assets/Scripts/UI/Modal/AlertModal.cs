@@ -3,30 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 
 public class AlertModal : MonoBehaviour
 {
-	[SerializeField] private StringEventChannelSO _channel;
+	public static UnityAction<string> Do;
+
 	[SerializeField] private TextMeshProUGUI _messageText;
 
-	private void Start()
+	private Canvas _canvas;
+
+    private void Awake()
+    {
+		_canvas = GetComponentInParent<Canvas>();
+    }
+
+    private void Start()
 	{
-		_channel.onEventRaised += Show;
+		Do += ShowUI;
 	}
 
     private void OnDestroy()
     {
-		_channel.onEventRaised -= Show;
+		Do -= ShowUI;
     }
 
-    public void Show(string message)
+    public void ShowUI(string message)
 	{
-		gameObject.SetActive(true);
+		_canvas.enabled = true;
 		_messageText.text = message;
 	}
 
-	public void Hide()
+	public void HideUI()
 	{
-		gameObject.SetActive(false);
+		_canvas.enabled = false;
 	}
 }

@@ -83,6 +83,8 @@ public class Equipment : IEquippable, IUpgradable, IEnchantable, IDisasemblable
         }
     }
 
+    public UnityAction<Equipment> onValueChanged;
+
     // 새로운 장비 획득
     public Equipment(EquipmentSO info)
     {
@@ -94,8 +96,6 @@ public class Equipment : IEquippable, IUpgradable, IEnchantable, IDisasemblable
             Buffs[i] = new EquipmentBuff(info.Buffs[i], Level);
         EnchantableCount = info.MaxEnchantableCount;
         EnchantedBuffs = new List<RuneBuff>();
-
-        Debug.Log(JsonUtility.ToJson(this));
     }
 
     // 기존의 장비 로드
@@ -127,7 +127,7 @@ public class Equipment : IEquippable, IUpgradable, IEnchantable, IDisasemblable
     {
         Level++;
         for (int i = 0; i < Buffs.Length; i++)
-            Buffs[i].Upgrade(Info.Buffs[i].Formula, Level);
+            Buffs[i].Upgrade(Level);
 
         return true;
     }

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
-using Extension;
 
 public enum CalculationType { Flat = 0, Percent = 1 }
 
@@ -18,9 +17,9 @@ public class EquipmentBuff
         Value = float.Parse(new DataTable().Compute(string.Format(info.Formula, level), null).ToString());
     }
 
-    public void Upgrade(string formula, int level)
+    public void Upgrade(int level)
     {
-        Value = float.Parse(new DataTable().Compute(string.Format(formula, level), null).ToString());
+        Value = float.Parse(new DataTable().Compute(string.Format(Info.Formula, level), null).ToString());
     }
 }
 
@@ -49,16 +48,16 @@ public class SkillBuff
         CoefValue = float.Parse(new DataTable().Compute(string.Format(info.Formula, level), null).ToString());
     }
 
-    public void Upgrade(string formula, int level)
+    public void Upgrade(int level)
     {
-        CoefValue = float.Parse(new DataTable().Compute(string.Format(formula, level), null).ToString());
+        CoefValue = float.Parse(new DataTable().Compute(string.Format(Info.Formula, level), null).ToString());
     }
 }
 
 [System.Serializable]
 public class SkillBuffInfo
 {
-    [field: SerializeField] public StatType Type { get; private set; }
+    [field: SerializeField] public StatType TargetStatType { get; private set; }
     [field: SerializeField] public StatType CoefStatType { get; protected set; }
     [field: SerializeField] public string Formula { get; private set; }
 

@@ -9,11 +9,15 @@ public abstract class BaseInventorySlot<T> : MonoBehaviour
     [SerializeField] protected Image _previewImage;
     [SerializeField] protected Button _slotButton;
 
-    public void Init(T t, UnityAction onClick)
-    {
-        UpdateUI(t);
-        _slotButton.onClick.AddListener(onClick);
-    }
+    public abstract void UpdateUI(T t);
 
-    public abstract void UpdateUI(T t);    
+    public void Init(UnityAction onClick)
+    {
+        GetComponent<Button>().onClick.AddListener(onClick);
+    }  
+
+    public void Remove()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -20,4 +20,16 @@ public class QuestTableSO : ScriptableObject
     {
         // Quest의 Current, Cleared, Executable 저장
     }
+
+    public void Perform(string id)
+    {
+        // NOTE :
+        // Quest와 Index를 모두 반환하는 확장메소드 작성
+
+        Quest quest = DailyQuests.Find((quest) => quest.Id.Equals(id));
+        if (quest != null) quest.Perform();
+
+        quest = RepeatableQuests.Find((quest) => quest.Id.Equals(id));
+        if (quest != null) quest.Perform();
+    }
 }

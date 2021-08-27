@@ -7,36 +7,43 @@ using TMPro;
 
 public class ConfirmModal : MonoBehaviour
 {
-	[SerializeField] private ConfirmModalEventChannelSO _channel;
+	public static UnityAction<string, UnityAction> Do;
+
 	[SerializeField] private TextMeshProUGUI _messageText;
 
+	private Canvas _canvas;
 	private UnityAction _onYes;
+
+	private void Awake()
+	{
+		_canvas = GetComponentInParent<Canvas>();
+	}
 
     private void Start()
     {
-		_channel.show += Show;
+		Do += ShowUI;
     }
 
     private void OnDestroy()
 	{
-		_channel.show -= Show;
+		Do -= ShowUI;
 	}
 
-    public void Show(string message, UnityAction onYes)
+    public void ShowUI(string message, UnityAction onYes)
 	{
-		gameObject.SetActive(true);
 		_messageText.text = message;
 		_onYes = onYes;
+		_canvas.enabled = true;
 	}
 
 	public void Yes()
 	{
 		_onYes?.Invoke();
-		gameObject.SetActive(false);
+		_canvas.enabled = false;
 	}
 
 	public void No()
 	{
-		gameObject.SetActive(false);
+		_canvas.enabled = false;
 	}
 }

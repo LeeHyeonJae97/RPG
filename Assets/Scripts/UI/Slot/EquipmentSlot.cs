@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class EquipmentSlot : BaseInventorySlot<Equipment>
 {
-    [SerializeField] protected GameObject _equippedMarkingImage;
+    [SerializeField] private GameObject _equippedMarkingImage;
 
     public override void UpdateUI(Equipment equipment)
     {

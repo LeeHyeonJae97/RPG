@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class Quest
 {
@@ -13,9 +14,15 @@ public abstract class Quest
     public bool Clearable => Current >= Required;
     public abstract bool Performable { get; }
 
+    public UnityAction<Quest> onValueChanged;    
+
     public void Perform()
     {
-        if (Performable) Current++;
+        if (Performable)
+        {
+            Current++;
+            onValueChanged?.Invoke(this);
+        }
     }
 
     public abstract void ReceiveReward();

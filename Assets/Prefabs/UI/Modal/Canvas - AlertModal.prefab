@@ -173,7 +173,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4656330112951164644}
         m_TargetAssemblyTypeName: AlertModal, Assembly-CSharp
-        m_MethodName: Hide
+        m_MethodName: HideUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -260,7 +260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c95846e7a96f64f89348fe7b275e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _channel: {fileID: 11400000, guid: c3bd7c3ea9111ad4a98620656406334d, type: 2}
   _messageText: {fileID: 3968343589673617966}
 --- !u!223 &6200865062507061877
 Canvas:

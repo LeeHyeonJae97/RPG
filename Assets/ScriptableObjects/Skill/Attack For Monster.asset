@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ae7d2bce18acb4fae4c23c22e2b55d, type: 3}
+  m_Name: Attack For Monster
+  m_EditorClassIdentifier: 
+  <Id>k__BackingField: 0
+  <Name>k__BackingField: "\uACF5\uACA9"
+  <Preview>k__BackingField: {fileID: 21300000, guid: a6bc582a954ca2a43a2faabe4d6fe271, type: 3}
+  <Star>k__BackingField: 1
+  <ResalePrice>k__BackingField: 50
+  <DisassembleOutputAmountRange>k__BackingField:
+    <Min>k__BackingField: 10
+    <Max>k__BackingField: 30
+  <BuffsDescriptionFormat>k__BackingField: "\uCD5C\uC804\uBC29\uC758 \uC801\uC5D0\uAC8C
+    \uBB3C\uB9AC\uACF5\uACA9\uB825\uC758 {Damage}\uB9CC\uD07C\uC758 \uB370\uBBF8\uC9C0\uB97C
+    \uC785\uD78C\uB2E4."
+  <Type>k__BackingField: 1
+  <TargetTag>k__BackingField: Combatant
+  <TargetType>k__BackingField: 1
+  <TargetCount>k__BackingField: 1
+  <Cooldown>k__BackingField: 0.5
+  <Damage>k__BackingField:
+    <CoefStatType>k__BackingField: 1
+    <Formula>k__BackingField: 0.01
+  <Heal>k__BackingField:
+    <CoefStatType>k__BackingField: 2
+    <Formula>k__BackingField: 
+  <Buffs>k__BackingField:
+  - <TargetStatType>k__BackingField: 0
+    <CoefStatType>k__BackingField: 0
+    <Formula>k__BackingField: 100 + {0} * 2

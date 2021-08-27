@@ -17,8 +17,19 @@ MonoBehaviour:
   <RecommendedCombatPower>k__BackingField: 0
   <Background>k__BackingField: {fileID: 21300000, guid: 07cc35e2fd2815a4ea0bcf218da7de0b, type: 3}
   <Waves>k__BackingField:
-  - <MonsterIds>k__BackingField: 000000000000000000000000
-  - <MonsterIds>k__BackingField: 010000000100000001000000
-  - <MonsterIds>k__BackingField: 020000000200000002000000
-  - <MonsterIds>k__BackingField: 000000000100000001000000
-  - <MonsterIds>k__BackingField: 010000000000000002000000
+  - <Monsters>k__BackingField:
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}
+    - {fileID: 11400000, guid: a358da60e7a98064facff8392385b910, type: 2}
+    - {fileID: 11400000, guid: 43182ff6f8dbcda4c86fa14801b6832b, type: 2}
+  - <Monsters>k__BackingField:
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}
+  - <Monsters>k__BackingField:
+    - {fileID: 11400000, guid: a358da60e7a98064facff8392385b910, type: 2}
+    - {fileID: 11400000, guid: a358da60e7a98064facff8392385b910, type: 2}
+    - {fileID: 11400000, guid: a358da60e7a98064facff8392385b910, type: 2}
+  - <Monsters>k__BackingField:
+    - {fileID: 11400000, guid: 43182ff6f8dbcda4c86fa14801b6832b, type: 2}
+    - {fileID: 11400000, guid: 43182ff6f8dbcda4c86fa14801b6832b, type: 2}
+    - {fileID: 11400000, guid: 43182ff6f8dbcda4c86fa14801b6832b, type: 2}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Character : IEquippable
 {
@@ -43,6 +44,8 @@ public class Character : IEquippable
     public bool IsCombating { get; set; } = false;
     public int[] CombatPositionIndices { get; private set; } = new int[5];
 
+    public UnityAction<Character> onValueChanged;    
+
     // NOTE :
     // 수정 필요
     public Character(string characterName, Sprite preview, CharacterStat[] stats)
@@ -62,17 +65,23 @@ public class Character : IEquippable
     public void Equipped(int presetIndex, int combatPositionIndex)
     {
         CombatPositionIndices[presetIndex] = combatPositionIndex;
+        onValueChanged?.Invoke(this);
     }
 
     public void Released(int presetIndex)
     {
         CombatPositionIndices[presetIndex] = -1;
+        onValueChanged?.Invoke(this);
     }
 
     public void InvestStatPoint(StatType type)
     {
-        StatPoint--;
-        Stats[(int)type].Invested();
+        if (StatPoint > 0)
+        {
+            StatPoint--;
+            Stats[(int)type].Invested();
+            onValueChanged?.Invoke(this);
+        }
     }
 
     public void Equipped(int presetIndex, int combatPositionIndex, int slotIndex) { }

@@ -11,48 +11,33 @@ public class StatusBarUI : MonoBehaviour
     [SerializeField] private Image[] _moneyIcons;
     [SerializeField] private TextMeshProUGUI[] _moneyTexts;
 
-    [SerializeField] private UIEventChannelSO _channel;
+    [SerializeField] private UserDataSO _userData;
 
     private void Start()
     {
-        _channel.initStatusBarUI += Init;
-        _channel.updateNicknameUI += UpdateNicknameUI;
-        _channel.updateStageUI += UpdateStageUI;
-        _channel.updateMoneyUI += UpdateMoneyUI;
+        _userData.OnNicknameChanged += UpdateNicknameUI;
+        _userData.OnStageValueChanged += UpdateStageUI;
+        _userData.OnMoneyValueChanged += UpdateMoneyUI;
     }
 
     private void OnDestroy()
     {
-        _channel.initStatusBarUI -= Init;
-        _channel.updateNicknameUI -= UpdateNicknameUI;
-        _channel.updateStageUI -= UpdateStageUI;
-        _channel.updateMoneyUI -= UpdateMoneyUI;
+        _userData.OnNicknameChanged -= UpdateNicknameUI;
+        _userData.OnStageValueChanged -= UpdateStageUI;
+        _userData.OnMoneyValueChanged -= UpdateMoneyUI;
     }
 
-    public void Init(UserDataSO userData)
-    {
-        _nicknameText.text = userData.Nickname;
-        _stageText.text = $"STAGE {userData.stage}";
-        for (int i = 0; i < userData.Moneys.Length; i++)
-        {
-            Debug.Log(userData.Moneys[i].amount);
-
-            _moneyIcons[i].sprite = userData.Moneys[i].Icon;
-            _moneyTexts[i].text = userData.Moneys[i].amount.ToString();
-        }
-    }
-
-    public void UpdateNicknameUI(string nickname)
+    private void UpdateNicknameUI(string nickname)
     {
         _nicknameText.text = nickname;
     }
 
-    public void UpdateStageUI(string name)
+    private void UpdateStageUI(string stageName)
     {
-        _stageText.text = name;
+        _stageText.text = stageName;
     }
 
-    public void UpdateMoneyUI(MoneyType type, int amount)
+    private void UpdateMoneyUI(MoneyType type, int amount)
     {
         _moneyTexts[(int)type].text = amount.ToString();
     }

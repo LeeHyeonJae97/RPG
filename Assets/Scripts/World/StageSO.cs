@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(fileName = "Stage", menuName = "ScriptableObject/World/Stage")]
 public class StageSO : ScriptableObject
@@ -15,5 +16,5 @@ public class StageSO : ScriptableObject
 [System.Serializable]
 public class Wave
 {
-    [field: SerializeField] public int[] MonsterIds { get; private set; }
+    [field: SerializeField] public MonsterSO[] Monsters { get; private set; } = new MonsterSO[3];
 }

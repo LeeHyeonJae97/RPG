@@ -24,8 +24,7 @@ public class RadioButton : Selectable, IPointerClickHandler
         if(value)
         {
             targetGraphic.color = colors.normalColor;
-            onSelected?.Invoke();
-            
+            onSelected?.Invoke();            
         }
         else
         {

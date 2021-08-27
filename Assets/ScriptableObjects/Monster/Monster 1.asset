@@ -15,24 +15,29 @@ MonoBehaviour:
   <Id>k__BackingField: 1
   <Name>k__BackingField: "\uACE0\uBE14\uB9B02"
   <Preview>k__BackingField: {fileID: 21300000, guid: f7de6e66b6acd1b47b273f41974db721, type: 3}
-  _stats:
-  - <StatName>k__BackingField: "\uCD5C\uB300\uCCB4\uB825"
-    <BaseValue>k__BackingField: 10000
+  <Stats>k__BackingField:
+  - <BaseValue>k__BackingField: 1000
     skillBuffs: []
-  - <StatName>k__BackingField: "\uBB3C\uB9AC\uACF5\uACA9\uB825"
-    <BaseValue>k__BackingField: 10
+  - <BaseValue>k__BackingField: 10
     skillBuffs: []
-  - <StatName>k__BackingField: "\uB9C8\uBC95\uACF5\uACA9\uB825"
-    <BaseValue>k__BackingField: 10
+  - <BaseValue>k__BackingField: 10
     skillBuffs: []
-  - <StatName>k__BackingField: "\uBB3C\uB9AC\uBC29\uC5B4\uB825"
-    <BaseValue>k__BackingField: 10
+  - <BaseValue>k__BackingField: 10
     skillBuffs: []
-  - <StatName>k__BackingField: "\uB9C8\uBC95\uBC29\uC5B4\uB825"
-    <BaseValue>k__BackingField: 10
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
     skillBuffs: []
   <Skills>k__BackingField:
-  - {fileID: 11400000, guid: 06bce38b840f28546bc92494cdf0264a, type: 2}
+  - <Level>k__BackingField: 0
+    <Info>k__BackingField: {fileID: 11400000, guid: e5d6d0e1b2a421948b5b487e49131648, type: 2}
+    curCooldown: 0
   <OutputExpRange>k__BackingField:
     <Min>k__BackingField: 5
     <Max>k__BackingField: 10

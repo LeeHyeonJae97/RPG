@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,25 +9,22 @@ public enum CombatTarget { All, Frontest, Backest, HighestHp }
 public class CombatManager : MonoBehaviour
 {
     [SerializeField] private LiveCombatant[] _liveCombatants = new LiveCombatant[3];
-    [SerializeField] private LiveMonster[] _liveMonsters = new LiveMonster[3]; 
+    [SerializeField] private LiveMonster[] _liveMonsters = new LiveMonster[3];
 
-    private List<ILive> _targets = new List<ILive>();
+    private List<Live> _targets = new List<Live>();
 
-    [SerializeField] private StatusManager _statusManager;
-
+    [SerializeField] private CorpsSO _corps;
     [SerializeField] private UserDataSO _userData;
     [SerializeField] private RelicSO _goldRelic;
     [SerializeField] private RelicSO _forUpgradeRelic;
     [SerializeField] private RelicSO _forEnchantRelic;
     [SerializeField] private RelicSO _expRelic;
 
-    [SerializeField] private UIEventChannelSO _channel;
     [SerializeField] private CombatEventChannelSO _combatEventChannel;
-    [SerializeField] private StringEventChannelSO _alertModalEventChannel;
     [SerializeField] private QuestEventChannelSO _questEventChannel;
+    [SerializeField] private StageEventChannelSO _stageEventChannel;
 
     private StageSO _stage;
-    private Dictionary<int, MonsterSO> _stageMonsterDic;
     private int _curWaveIndex;
 
     private bool CombatantsAllDead
@@ -37,7 +33,7 @@ public class CombatManager : MonoBehaviour
         {
             for (int i = 0; i < _liveCombatants.Length; i++)
             {
-                if (!_liveCombatants[i].IsDead)
+                if (!_liveCombatants[i].IsEmpty && !_liveCombatants[i].IsDead)
                     return false;
             }
 
@@ -50,7 +46,7 @@ public class CombatManager : MonoBehaviour
         {
             for (int i = 0; i < _liveMonsters.Length; i++)
             {
-                if (!_liveMonsters[i].IsDead)
+                if (!_liveMonsters[i].IsEmpty && !_liveMonsters[i].IsDead)
                     return false;
             }
 
@@ -58,34 +54,64 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public StageSO InitStage(StageSO stage, MonsterSO[] monsters)
+    private void Start()
     {
-        StageSO old = _stage;
+        _stageEventChannel.startStage += StartStage;
+    }
+
+    private void OnDestroy()
+    {
+        _stageEventChannel.startStage -= StartStage;
+    }
+
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+
+    public void StartStage(StageSO stage)
+    {
+        Debug.Log("Start Stage");
+
+        if (_stage != null && _stage != stage) Addressables.Release(_stage);
 
         _stage = stage;
-        _stageMonsterDic = new Dictionary<int, MonsterSO>();
-        for (int i = 0; i < monsters.Length; i++)
-            _stageMonsterDic.Add(monsters[i].Id, monsters[i]);
-        _curWaveIndex = 0;
-
-        Joined(_stage.Waves[_curWaveIndex]);
-
-        return old;
+        _curWaveIndex = -1;
+        NextWave();
     }
 
-    public void RestartStage()
+    private void NextWave()
     {
-        _curWaveIndex = 0;
-        Joined(_stage.Waves[_curWaveIndex]);
+        Debug.Log("Next Wave");
+        StartCoroutine(NextWaveCoroutine());
     }
 
-    public void NextWave()
+    private IEnumerator NextWaveCoroutine()
     {
-        Joined(_stage.Waves[++_curWaveIndex]);
+        Pause(true);
+        yield return new WaitForSeconds(1);
+
+
+        _curWaveIndex++;
+        if (_curWaveIndex >= _stage.Waves.Length)
+        {
+            _curWaveIndex = 0;
+            CombatantRejoined();
+        }
+        MonsterJoined(_stage.Waves[_curWaveIndex].Monsters);
+
+        Pause(false);
     }
 
-    public void Joined(Combatant[] combatants)
-    {       
+    public void CombatantJoined()
+    {
+        CombatantJoined(_corps.joinedPresetIndex);
+    }
+
+    public void CombatantJoined(int presetIndex)
+    {
+        _corps.joinedPresetIndex = presetIndex;
+
+        Combatant[] combatants = _corps.Presets[presetIndex].Combatants;
+
         // 기존의 Combatant 해제
         for (int i = 0; i < _liveCombatants.Length; i++)
         {
@@ -107,29 +133,44 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void Joined(Wave wave)
+    public void CombatantRejoined()
     {
-        MonsterSO[] monsters = new MonsterSO[wave.MonsterIds.Length];
-        for (int i = 0; i < wave.MonsterIds.Length; i++)
-            monsters[i] = _stageMonsterDic[wave.MonsterIds[i]];
-
-        for (int i = 0; i < monsters.Length; i++)
-            _liveMonsters[i].Init(monsters[i], GetTarget, Die);
+        for (int i = 0; i < _liveCombatants.Length; i++)
+        {
+            if (!_liveCombatants[i].IsEmpty)
+                _liveCombatants[i].Init();
+        }
     }
+
+    public void MonsterJoined(MonsterSO[] monsters)
+    {
+        for (int i = 0; i < monsters.Length; i++)
+        {
+            if (monsters[i] != null)
+                _liveMonsters[i].Init(monsters[i], GetTarget, Die);
+        }
+    }
+
+    public void MonsterRejoined()
+    {
+        for (int i = 0; i < _liveMonsters.Length; i++)
+        {
+            if (!_liveMonsters[i].IsEmpty)
+                _liveMonsters[i].Init();
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
 
     private void Die(Combatant dead)
     {
-        if (CombatantsAllDead)
-        {
-            for (int i = 0; i < _liveCombatants.Length; i++)
-                _liveCombatants[i].Init();
-
-            RestartStage();
-        }
+        if (CombatantsAllDead) RestartStage();
     }
 
     private void Die(MonsterSO dead)
     {
+        // 경험치
         int amount = (int)(dead.OutputExpRange.Random() * (1 + _expRelic.Buff.Value / 100));
         for (int i = 0; i < _liveCombatants.Length; i++)
         {
@@ -137,50 +178,40 @@ public class CombatManager : MonoBehaviour
                 _liveCombatants[i].Combatant.Character.Exp += amount;
         }
 
-        // NOTE :
-        // UI 업데이트
-        _channel.updateCombatingCharacterInfoUI?.Invoke();
-
-        // NOTE :
-        // MoneyType에서의 값이 UserStat에서의 값과 동일하기 때문에 RelicInventory의 Items에서 MoneyType값으로 맞는 Relic을 찾을 수 있다.
-
+        // 재화
         switch (dead.OutputMoneyType)
         {
             case MoneyType.Gold:
-                _statusManager.EarnMoney(MoneyType.Gold, (int)(dead.OutputMoneyRange.Random() * (1 + _goldRelic.Buff.Value / 100)));
+                _userData.EarnMoney(MoneyType.Gold, (int)(dead.OutputMoneyRange.Random() * (1 + _goldRelic.Buff.Value / 100)));
                 break;
             case MoneyType.ForUpgrade:
-                _statusManager.EarnMoney(MoneyType.ForUpgrade, (int)(dead.OutputMoneyRange.Random() * (1 + _forUpgradeRelic.Buff.Value / 100)));
+                _userData.EarnMoney(MoneyType.ForUpgrade, (int)(dead.OutputMoneyRange.Random() * (1 + _forUpgradeRelic.Buff.Value / 100)));
                 break;
             case MoneyType.ForEnchant:
-                _statusManager.EarnMoney(MoneyType.ForEnchant, (int)(dead.OutputMoneyRange.Random() * (1 + _forEnchantRelic.Buff.Value / 100)));
+                _userData.EarnMoney(MoneyType.ForEnchant, (int)(dead.OutputMoneyRange.Random() * (1 + _forEnchantRelic.Buff.Value / 100)));
                 break;
         }
 
+        // 퀘스트
         _questEventChannel.perform?.Invoke("Kill");
 
-        if (MonstersAllDead)
-        {
-            if (_curWaveIndex < _stage.Waves.Length - 1)
-                NextWave();
-            else
-                RestartStage();
-        }
+        // 클리어 체크
+        if (MonstersAllDead) NextWave();
     }
 
-    public MonsterSO testMonster;
-
-    [Button("Test Die")]
-    public void TestDie()
+    private void Pause(bool value)
     {
-        Die(testMonster);
+        for (int i = 0; i < _liveCombatants.Length; i++)
+            _liveCombatants[i].enabled = !value;
+        for (int i = 0; i < _liveMonsters.Length; i++)
+            _liveMonsters[i].enabled = !value;
     }
 
     #region GetTarget
 
-    public List<ILive> GetTarget(string tag, CombatTarget type, int count)
+    public List<Live> GetTarget(string tag, CombatTarget type, int count)
     {
-        ILive[] candidates = null;
+        Live[] candidates = null;
         switch (tag)
         {
             case "Combatant":
@@ -211,7 +242,7 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public List<ILive> Frontest(ILive[] candidates, int count)
+    public List<Live> Frontest(Live[] candidates, int count)
     {
         _targets.Clear();
 
@@ -224,7 +255,7 @@ public class CombatManager : MonoBehaviour
         return _targets;
     }
 
-    public List<ILive> Backest(ILive[] candidates, int count)
+    public List<Live> Backest(Live[] candidates, int count)
     {
         _targets.Clear();
 
@@ -237,12 +268,12 @@ public class CombatManager : MonoBehaviour
         return _targets;
     }
 
-    public List<ILive> HighestHp(int count)
+    public List<Live> HighestHp(int count)
     {
         return _targets;
     }
 
-    public List<ILive> All(ILive[] candidates)
+    public List<Live> All(Live[] candidates)
     {
         _targets.Clear();
         _targets.AddRange(candidates);

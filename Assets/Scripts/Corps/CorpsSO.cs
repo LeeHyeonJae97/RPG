@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TigerForge;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "Corps", menuName = "ScriptableObject/Corps")]
 public class CorpsSO : ScriptableObject
 {
     public int joinedPresetIndex;
 
-    public Combatant[,] Combatants { get; private set; } = new Combatant[5, 3];
+    public Preset[] Presets { get; private set; } = new Preset[5];
 
     public bool Joinable(int presetIndex)
     {
-        Combatant[] combatants = GetCombatants(presetIndex);
+        if (presetIndex == joinedPresetIndex) return false;
+
+        Combatant[] combatants = Presets[presetIndex].Combatants;
         return combatants[0].IsCharacterEquipped || combatants[1].IsCharacterEquipped || combatants[2].IsCharacterEquipped;
     }
 
@@ -20,7 +23,7 @@ public class CorpsSO : ScriptableObject
     {
         if (presetIndex != joinedPresetIndex) return true;
 
-        Combatant[] combatants = GetCombatants(presetIndex);
+        Combatant[] combatants = Presets[presetIndex].Combatants;
         for (int i = 0; i < combatants.Length; i++)
         {
             if (i != combatPositionIndex && combatants[i].IsCharacterEquipped)
@@ -30,20 +33,23 @@ public class CorpsSO : ScriptableObject
         return false;
     }
 
-    public Combatant[] GetCombatants(int presetIndex)
+    private void OnEnable()
     {
-        return new Combatant[] { Combatants[presetIndex, 0], Combatants[presetIndex, 1], Combatants[presetIndex, 2] };
+        for (int i = 0; i < Presets.Length; i++)
+        {
+            Presets[i] = new Preset();
+            Combatant[] combatants = Presets[i].Combatants;
+            for (int j = 0; j < combatants.Length; j++)
+            {
+                if (combatants[j] == null)
+                    combatants[j] = new Combatant();
+            }
+        }
     }
 
     public void Load(int joinedPresetIndex, List<Character> characters, List<Equipment> equipments, List<Skill> skills)
     {
         this.joinedPresetIndex = joinedPresetIndex;
-
-        for (int i = 0; i < Combatants.GetLength(0); i++)
-        {
-            for (int j = 0; j < Combatants.GetLength(1); j++)
-                Combatants[i, j] = new Combatant();
-        }
 
         for (int i = 0; i < characters.Count; i++)
         {
@@ -51,7 +57,7 @@ public class CorpsSO : ScriptableObject
             {
                 int combatPosition = characters[i].CombatPositionIndices[j];
                 if (combatPosition != -1)
-                    Combatants[j, combatPosition].EquipCharacter(characters[i]);
+                    Presets[j].Combatants[combatPosition].EquipCharacter(characters[i]);
             }
         }
 
@@ -67,4 +73,10 @@ public class CorpsSO : ScriptableObject
         //        Combatants[j, skills[i].CombatPositionIndices[j]].EquipSkill(skills[i].SlotIndices[j], skills[i]);
         //}
     }
+}
+
+[System.Serializable]
+public class Preset
+{
+    [field: SerializeField] public Combatant[] Combatants { get; private set; } = new Combatant[3];
 }

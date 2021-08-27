@@ -9,6 +9,10 @@ public class RepeatableQuest : Quest
 
     public override void ReceiveReward()
     {
-        if (Clearable) Current -= Required;
+        if (Clearable)
+        {
+            Current -= Required;
+            onValueChanged?.Invoke(this);
+        }
     }
 }

@@ -21,14 +21,19 @@ MonoBehaviour:
     <Min>k__BackingField: 10
     <Max>k__BackingField: 30
   <BuffsDescriptionFormat>k__BackingField: "\uCD5C\uD6C4\uBC29\uC758 \uC544\uAD70\uC758
-    \uCCB4\uB825\uC744 \uB9C8\uBC95\uACF5\uACA9\uB825\uC758 {Value}%\uB9CC\uD07C
-    \uD68C\uBCF5\uC2DC\uD0A8\uB2E4."
-  <Type>k__BackingField: 1
+    \uCCB4\uB825\uC744 \uB9C8\uBC95\uACF5\uACA9\uB825\uC758 {Heal}%\uB9CC\uD07C \uD68C\uBCF5\uC2DC\uD0A8\uB2E4."
+  <Type>k__BackingField: 2
   <TargetTag>k__BackingField: Combatant
   <TargetType>k__BackingField: 2
   <TargetCount>k__BackingField: 1
   <Cooldown>k__BackingField: 2
+  <Damage>k__BackingField:
+    <CoefStatType>k__BackingField: 0
+    <Formula>k__BackingField: 
+  <Heal>k__BackingField:
+    <CoefStatType>k__BackingField: 2
+    <Formula>k__BackingField: 0.5
   <Buffs>k__BackingField:
-  - <StatName>k__BackingField: 
-    <CoefStatName>k__BackingField: "\uB9C8\uBC95\uACF5\uACA9\uB825"
+  - <TargetStatType>k__BackingField: 0
+    <CoefStatType>k__BackingField: 0
     <Formula>k__BackingField: 100 + {0} * 2

@@ -14,14 +14,17 @@ public class QuestSlot : MonoBehaviour
     [SerializeField] private GameObject _unperformableCoverImage;
     [SerializeField] private Button _receiveRewardButton;
 
-    public void Init(Quest quest, UnityAction receiveReward)
-    {
-        UpdateUI(quest);
-        gameObject.SetActive(true);
+    private UnityAction _onClick;
 
-        _receiveRewardButton.onClick.RemoveAllListeners();
-        _receiveRewardButton.onClick.AddListener(() => receiveReward?.Invoke());
-        _receiveRewardButton.onClick.AddListener(() => UpdateUI(quest));
+    private void Start()
+    {
+        _receiveRewardButton.onClick.AddListener(_onClick);
+    }
+
+    public void Init(UnityAction receiveReward)
+    {
+        _onClick = receiveReward;
+        gameObject.SetActive(true);
     }
 
     public void UpdateUI(Quest quest)

@@ -4,18 +4,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public delegate List<ILive> GetTarget(string tag, CombatTarget type, int count);
+public delegate List<Live> GetTarget(string tag, CombatTarget type, int count);
+public delegate float GetStatValue(StatType type);
 
-public class LiveCombatant : MonoBehaviour, ILive
+public class LiveCombatant : Live
 {
-    public float CurHp { get; private set; }
     public Combatant Combatant { get; private set; }
+    public override bool IsEmpty => Combatant == null;
 
-    public bool IsDead => !enabled;
-    public bool IsEmpty => Combatant == null;
-
-    private SpriteRenderer _sr;
-    private GetTarget _getTarget;
     private UnityAction<Combatant> _die;
 
     private void Update()
@@ -26,7 +22,7 @@ public class LiveCombatant : MonoBehaviour, ILive
             {
                 Skill skill = Combatant.Skills[i];
                 bool usable = skill.CalculateCooldown();
-                //if (usable) skill.Use(Info.StatDic.Cast<Dictionary<string, Stat>>() as Dictionary<string, Stat>, _getTarget);
+                if (usable) skill.Use(GetStatValue, _getTarget);
             }
         }
     }
@@ -35,7 +31,7 @@ public class LiveCombatant : MonoBehaviour, ILive
     public void Init(Combatant info, GetTarget getTarget, UnityAction<Combatant> die)
     {
         Combatant = info;
-        CurHp = Combatant.Stats[(int)StatType.Hp].Value;
+        CurHp = GetStatValue(StatType.Hp);
 
         if (_sr == null) _sr = GetComponentInChildren<SpriteRenderer>();
         _sr.sprite = Combatant.Character.Preview;
@@ -45,16 +41,20 @@ public class LiveCombatant : MonoBehaviour, ILive
 
         enabled = true;
         gameObject.SetActive(true);
+
+        onCurHpRatioValueChanged?.Invoke(CurHp / GetStatValue(StatType.Hp));
     }
 
     // 스테이지 클리어 또는 스테이지 재시작시 호출
     public void Init()
-    {        
+    {
         Combatant.ResetSkillBuffs();
-        CurHp = Combatant.Stats[(int)StatType.Hp].Value;
+        CurHp = GetStatValue(StatType.Hp);
 
         enabled = true;
         gameObject.SetActive(true);
+
+        onCurHpRatioValueChanged?.Invoke(CurHp / GetStatValue(StatType.Hp));
     }
 
     // 전투에서 나간 경우 호출
@@ -65,28 +65,21 @@ public class LiveCombatant : MonoBehaviour, ILive
         gameObject.SetActive(false);
     }
 
-    public void Damaged(float damage)
-    {
-        CurHp -= damage;
-        if (CurHp <= 0)
-            Die();
-    }
-
-    public void Healed(float amount)
-    {
-        CurHp += amount;
-        CurHp = Mathf.Min(CurHp, Combatant.Stats[(int)StatType.Hp].Value);
-    }
-
-    public void Buffed(StatType type, float value)
+    public override void Buffed(StatType type, float value)
     {
         Combatant.Stats[(int)type].skillBuffs.Add(value);
+        onCurHpRatioValueChanged?.Invoke(CurHp / GetStatValue(StatType.Hp));
     }
 
-    public void Die()
+    public override void Die()
     {
         Debug.Log("Die Combatant");
         enabled = false;
         _die?.Invoke(Combatant);
+    }
+
+    public override float GetStatValue(StatType type)
+    {
+        return Combatant.Stats[(int)type].Value;
     }
 }

@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 213942865}
   - component: {fileID: 213942866}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: DataLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -167,7 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _title: {fileID: 11400000, guid: e4e04590b98934640b12c902117a6945, type: 2}
-  _game: {fileID: 11400000, guid: e159ecc93b541674bbd5c63d79cdc6e2, type: 2}
+  _gameUI: {fileID: 11400000, guid: e159ecc93b541674bbd5c63d79cdc6e2, type: 2}
+  _gamePlay: {fileID: 11400000, guid: 7d989365ca08b7e4cb6ccd4dd671ca22, type: 2}
   _userData: {fileID: 11400000, guid: b2aff8d0e2f28174cb5f100f88448448, type: 2}
   _corps: {fileID: 11400000, guid: 991de0e833386a845985634867c9a811, type: 2}
   _questTable: {fileID: 11400000, guid: ab933a2f6faf9d84db4093e1c05fbc1e, type: 2}
@@ -176,8 +177,6 @@ MonoBehaviour:
   _skillInventory: {fileID: 11400000, guid: 6c467a556f8f22e4fbc382acccc66841, type: 2}
   _runeInventory: {fileID: 11400000, guid: 00334982e27be9d47ad587d0586cbcdd, type: 2}
   _relicInventory: {fileID: 11400000, guid: bd51fdf4bb6e9674385f8f66eece9d15, type: 2}
-  _uiEventChannel: {fileID: 11400000, guid: 1991c8500dda45349af8dc3444f23305, type: 2}
-  _waitingEventChannel: {fileID: 11400000, guid: d73636f517c14f547a6f2d2503f60368, type: 2}
 --- !u!1 &330487253
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,8 +211,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -186.7}
-  m_SizeDelta: {x: 570.0396, y: 1013.4037}
+  m_AnchoredPosition: {x: 0, y: -224.4419}
+  m_SizeDelta: {x: 570.0396, y: 1088.8873}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &330487255
 MonoBehaviour:
@@ -381,7 +380,7 @@ GameObject:
   - component: {fileID: 1296614876}
   - component: {fileID: 1296614875}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: Canvas - Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,7 +466,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10000
   m_TargetDisplay: 0
 --- !u!1 &1397345887
 GameObject:

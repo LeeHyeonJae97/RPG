@@ -18,19 +18,19 @@ MonoBehaviour:
   m_GUID: b2869e984a1018947b11a077e22c14b3
   m_SerializeEntries:
   - m_GUID: 62f5096b2a79e2e469e68487236c3e3b
-    m_Address: s/Scenes/Global.unityunity
+    m_Address: Global
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   - m_GUID: 9102197eb56dd964ebe48e3720e0a584
-    m_Address: Assets/Scenes/Game.unity
+    m_Address: GameUI
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   - m_GUID: 63ef64793ddc31147918752132eaef11
-    m_Address: Assets/Scenes/Title.unity
+    m_Address: Title
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}

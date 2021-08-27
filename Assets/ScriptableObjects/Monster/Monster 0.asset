@@ -16,11 +16,27 @@ MonoBehaviour:
   <Name>k__BackingField: "\uACE0\uBE14\uB9B01"
   <Preview>k__BackingField: {fileID: 21300000, guid: ebe5ba43d0d37e94b8fb0939e651c864, type: 3}
   <Stats>k__BackingField:
-  - <BaseValue>k__BackingField: 100
+  - <BaseValue>k__BackingField: 1000
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
+    skillBuffs: []
+  - <BaseValue>k__BackingField: 10
     skillBuffs: []
   <Skills>k__BackingField:
-  - <Level>k__BackingField: 3
-    <Info>k__BackingField: {fileID: 11400000, guid: 06bce38b840f28546bc92494cdf0264a, type: 2}
+  - <Level>k__BackingField: 0
+    <Info>k__BackingField: {fileID: 11400000, guid: e5d6d0e1b2a421948b5b487e49131648, type: 2}
     curCooldown: 0
   <OutputExpRange>k__BackingField:
     <Min>k__BackingField: 5

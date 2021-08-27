@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum StatType { Hp, PhyAtk, MagAtk, PhyDef, MagDef, CrtAtk, CrtPrc, CdRdc, CcPst }
+public enum UserStatType { Gold, ForUpgrade, ForEnchant, Exp, EquipmentDrop, Boss, GameSpeed }
+
 public enum MainTab { Combat, Character, Inventory, Smithy, Dungeon, Shop }
 public enum InventoryTab { Equipment, Skill, Rune, Relic }
 public enum SmithyTab { Introduce, Make, Upgrade, Enchant, Disassemble }

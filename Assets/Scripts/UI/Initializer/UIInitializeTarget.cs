@@ -41,7 +41,7 @@ public class UIInitializeTarget : MonoBehaviour
             switch (_activateTarget)
             {
                 case ActivateTarget.Canvas:
-                    GetComponentsInParent<Canvas>(true)[0].gameObject.SetActive(_active);
+                    GetComponentsInParent<Canvas>(true)[0].enabled = _active;
                     break;
 
                 case ActivateTarget.Self:

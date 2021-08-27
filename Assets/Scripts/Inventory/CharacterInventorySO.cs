@@ -14,7 +14,7 @@ public class CharacterInventorySO : BaseInventorySO<Character>
             stats[i] = new CharacterStat(Random.Range(5, 11));
         Character character = new Character("¸ðÇè°¡", null, stats);
         character.Equipped(0, 0);
-        Items.Add(character);
+        Add(character);
     }
 
     public override void Save()

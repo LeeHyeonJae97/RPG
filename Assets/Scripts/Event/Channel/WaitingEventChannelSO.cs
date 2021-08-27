@@ -6,6 +6,4 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "WaitingEventChannel", menuName = "ScriptableObject/Event/WaitingEventChannel")]
 public class WaitingEventChannelSO : BaseEventChannelSO
 {
-    public UnityAction<string> begin;
-    public UnityAction end;
 }

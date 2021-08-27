@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "Relic", menuName = "ScriptableObject/Item/Relic")]
 public class RelicSO : ScriptableObject
@@ -24,6 +25,8 @@ public class RelicSO : ScriptableObject
     public int Amount { get; private set; }
     [field: SerializeField] public RelicBuff Buff { get; private set; }
 
+    public UnityAction<RelicSO> onValueChanged;
+
     public void Init(int amount)
     {
         Amount = amount;
@@ -33,5 +36,6 @@ public class RelicSO : ScriptableObject
     public void Gain()
     {
         Buff.SetValue(++Amount);
+        onValueChanged?.Invoke(this);
     }
 }

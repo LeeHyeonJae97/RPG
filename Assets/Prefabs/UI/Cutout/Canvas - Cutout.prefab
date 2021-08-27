@@ -260,7 +260,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8446920520954106062}
         m_TargetAssemblyTypeName: Cutout, Assembly-CSharp
-        m_MethodName: Hide
+        m_MethodName: HideUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

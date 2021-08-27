@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: World 1
   m_EditorClassIdentifier: 
   <Name>k__BackingField: 1111
+  <Stages>k__BackingField:
+  - m_AssetGUID: 89c42a77b465e154192556660092ba4b
+    m_SubObjectName: 
+    m_SubObjectType: 

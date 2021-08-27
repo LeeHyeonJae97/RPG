@@ -17,8 +17,7 @@ MonoBehaviour:
   <RecommendedCombatPower>k__BackingField: 0
   <Background>k__BackingField: {fileID: 21300000, guid: 556a6ba7bb74e3040bf000c4b581bc13, type: 3}
   <Waves>k__BackingField:
-  - <MonsterIds>k__BackingField: 000000000000000000000000
-  - <MonsterIds>k__BackingField: 010000000100000001000000
-  - <MonsterIds>k__BackingField: 020000000200000002000000
-  - <MonsterIds>k__BackingField: 000000000100000001000000
-  - <MonsterIds>k__BackingField: 010000000000000002000000
+  - <Monsters>k__BackingField:
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}
+    - {fileID: 11400000, guid: e5d8d69fc6298a049ac4df2fb5c5f223, type: 2}

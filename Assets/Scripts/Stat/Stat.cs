@@ -104,4 +104,9 @@ public class MonsterStat
             return value;
         }
     }
+
+    public void ResetSkillBuffs()
+    {
+        skillBuffs = new List<float>();
+    }
 }

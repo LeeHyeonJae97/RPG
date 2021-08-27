@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Rune : IDisasemblable
 {
@@ -22,6 +23,9 @@ public class Rune : IDisasemblable
             return str;
         }
     }
+
+    public UnityAction<Rune> onValueChanged;
+    public UnityAction onRemoved;
 
     // »õ·Î¿î ·é È¹µæ
     public Rune(RuneSO info)

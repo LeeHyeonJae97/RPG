@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Combatant
 {
@@ -17,6 +18,8 @@ public class Combatant
     public bool IsEquipmentEquippedAt(int index) => Equipments[index] != null;
     public bool IsSkillEquippedAt(int index) => Skills[index] != null;
 
+    public UnityAction<Combatant> onValueChanged;
+
     public Combatant()
     {
         for (int i = 0; i < Stats.Length; i++)
@@ -28,6 +31,8 @@ public class Combatant
         IsJoined = true;
         Pos = pos;
         Character.IsCombating = true;
+
+        onValueChanged?.Invoke(this);
     }
 
     public void UnjoinCombat()
@@ -37,6 +42,10 @@ public class Combatant
         Character.IsCombating = false;
 
         ResetSkillBuffs();
+
+        // NOTE :
+        // ResetSkillBuffs 에서도 호출된다.
+        onValueChanged?.Invoke(this);
     }
 
     public void EquipCharacter(Character character)
@@ -44,6 +53,8 @@ public class Combatant
         Character = character;
         for (int i = 0; i < Stats.Length; i++)
             Stats[i].characterStat = character.Stats[i];
+
+        onValueChanged?.Invoke(this);
     }
 
     public Character ReleaseCharacter()
@@ -52,6 +63,9 @@ public class Combatant
         Character = null;
         for (int i = 0; i < Stats.Length; i++)
             Stats[i].characterStat = released.Stats[i];
+
+        onValueChanged?.Invoke(this);
+
         return released;
     }
 
@@ -66,6 +80,8 @@ public class Combatant
         List<RuneBuff> enchantedBuffs = equipment.EnchantedBuffs;
         for (int i = 0; i < enchantedBuffs.Count; i++)
             Stats[(int)enchantedBuffs[i].Type].equipmentEnchantedBuffs.Add(enchantedBuffs[i]);
+
+        onValueChanged?.Invoke(this);
     }
 
     public Equipment ReleaseEquipment(int index)
@@ -81,18 +97,24 @@ public class Combatant
         for (int i = 0; i < enchantedBuffs.Count; i++)
             Stats[(int)enchantedBuffs[i].Type].equipmentEnchantedBuffs.Remove(enchantedBuffs[i]);
 
+        onValueChanged?.Invoke(this);
+
         return released;
     }
 
     public void EquipSkill(int index, Skill skill)
     {
         Skills[index] = skill;
+        onValueChanged?.Invoke(this);
     }
 
     public Skill ReleaseSkill(int index)
     {
         Skill released = Skills[index];
         Skills[index] = null;
+
+        onValueChanged?.Invoke(this);
+
         return released;
     }
 
@@ -100,5 +122,7 @@ public class Combatant
     {
         for (int i = 0; i < Stats.Length; i++)
             Stats[i].ResetSkillBuffs();
+
+        onValueChanged?.Invoke(this);
     }
 }

@@ -4,74 +4,31 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class LiveMonster : MonoBehaviour, ILive
+public class LiveMonster : Live
 {
-    public float CurHp { get; private set; }
     public MonsterSO Monster { get; private set; }
+    public override bool IsEmpty => Monster == null;
 
-    public bool IsDead => !enabled;
-    public bool IsEmpty => Monster == null;
-
-    private SpriteRenderer _sr;
-    private GetTarget _getTarget;
     private UnityAction<MonsterSO> _die;
 
     private void Update()
     {
         for (int i = 0; i < Monster.Skills.Length; i++)
         {
-            if (Monster.Skills[i] == null) continue;
-
-            bool usable = Monster.Skills[i].CalculateCooldown();
-            //if (usable)
-            //{
-            //    Skill skill = _skills[i];
-            //    SkillSO info = _skills[i].Info;
-
-            //    // 쿨타임 초기화
-            //    skill.curCooldown = info.Cooldown;
-
-            //    // 타겟 선정
-            //    List<ILive> targets = _getTarget?.Invoke(info.TargetTag, info.TargetType, info.TargetCount);
-
-            //    switch (info.Type)
-            //    {
-            //        case SkillType.Damage:
-            //            for (int j = 0; j < skill.Buffs.Length; j++)
-            //            {
-            //                float value = Info.StatDic[skill.Buffs[j].CoefStatName].Value * skill.Buffs[j].CoefValue;
-            //                for (int k = 0; k < targets.Count; k++)
-            //                    targets[k].Damaged(value);
-            //            }
-            //            break;
-
-            //        case SkillType.Heal:
-            //            for (int j = 0; j < skill.Buffs.Length; j++)
-            //            {
-            //                float value = Info.StatDic[skill.Buffs[j].CoefStatName].Value * skill.Buffs[j].CoefValue;
-            //                for (int k = 0; k < targets.Count; k++)
-            //                    targets[k].Healed(value);
-            //            }
-            //            break;
-
-            //        case SkillType.Buff:
-            //            for (int j = 0; j < skill.Buffs.Length; j++)
-            //            {
-            //                float value = Info.StatDic[skill.Buffs[j].CoefStatName].Value * skill.Buffs[j].CoefValue;
-            //                for (int k = 0; k < targets.Count; k++)
-            //                    targets[k].Buffed(skill.Buffs[k].StatName, value);
-            //            }
-            //            break;
-            //    }
-            //}
+            if (Monster.Skills[i] != null)
+            {
+                Skill skill = Monster.Skills[i];
+                bool usable = skill.CalculateCooldown();
+                if (usable) skill.Use(GetStatValue, _getTarget);
+            }
         }
     }
 
     // 새롭게 스테이지 출전하는 경우 호출
-    public void Init(MonsterSO info, GetTarget getTarget, UnityAction<MonsterSO> die)
+    public void Init(MonsterSO monster, GetTarget getTarget, UnityAction<MonsterSO> die)
     {
-        Monster = info;
-        CurHp = Monster.Stats[(int)StatType.Hp].Value;
+        Monster = monster;
+        CurHp = GetStatValue(StatType.Hp);
 
         if (_sr == null) _sr = GetComponentInChildren<SpriteRenderer>();
         _sr.sprite = Monster.Preview;
@@ -81,30 +38,36 @@ public class LiveMonster : MonoBehaviour, ILive
 
         enabled = true;
         gameObject.SetActive(true);
+
+        onCurHpRatioValueChanged?.Invoke(CurHp / GetStatValue(StatType.Hp));
     }
 
-    public void Damaged(float damage)
+    public void Init()
     {
-        CurHp -= damage;
-        if (CurHp <= 0)
-            Die();
+        Monster.ResetSkillBuffs();
+        CurHp = GetStatValue(StatType.Hp);
+
+        enabled = true;
+        gameObject.SetActive(true);
+
+        onCurHpRatioValueChanged?.Invoke(CurHp / GetStatValue(StatType.Hp));
     }
 
-    public void Healed(float amount)
-    {
-        CurHp += amount;
-        CurHp = Mathf.Min(CurHp, Monster.Stats[(int)StatType.Hp].Value);
-    }
-
-    public void Buffed(StatType type, float value)
+    public override void Buffed(StatType type, float value)
     {
         Monster.Stats[(int)type].skillBuffs.Add(value);
+        onCurHpRatioValueChanged?.Invoke(CurHp / GetStatValue(StatType.Hp));
     }
 
-    public void Die()
+    public override void Die()
     {
         Debug.Log("Die Monster");
         enabled = false;
         _die?.Invoke(Monster);
+    }
+
+    public override float GetStatValue(StatType type)
+    {
+        return Monster.Stats[(int)type].Value;
     }
 }
