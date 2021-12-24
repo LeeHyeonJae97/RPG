@@ -165,7 +165,7 @@ public class CombatManager : MonoBehaviour
 
     private void Die(Combatant dead)
     {
-        if (CombatantsAllDead) RestartStage();
+        //if (CombatantsAllDead) RestartStage();
     }
 
     private void Die(MonsterSO dead)

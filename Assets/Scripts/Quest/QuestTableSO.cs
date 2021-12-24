@@ -7,6 +7,11 @@ public class QuestTableSO : ScriptableObject
 {
     [field: SerializeField] public List<DailyQuest> DailyQuests { get; private set; }
     [field: SerializeField] public List<RepeatableQuest> RepeatableQuests { get; private set; }
+    [field: SerializeField] public List<AchievementQuest> AchievementQuests { get; private set; }
+
+    private Dictionary<string, DailyQuest> dailyQuestDic;
+    private Dictionary<string, RepeatableQuest> repeatableQuestDic;
+    private Dictionary<string, AchievementQuest> achievementQuestDic;
 
     public void Load()
     {
@@ -23,13 +28,8 @@ public class QuestTableSO : ScriptableObject
 
     public void Perform(string id)
     {
-        // NOTE :
-        // Quest와 Index를 모두 반환하는 확장메소드 작성
-
-        Quest quest = DailyQuests.Find((quest) => quest.Id.Equals(id));
-        if (quest != null) quest.Perform();
-
-        quest = RepeatableQuests.Find((quest) => quest.Id.Equals(id));
-        if (quest != null) quest.Perform();
+        if (dailyQuestDic.TryGetValue(id, out DailyQuest dailyQuest)) dailyQuest.Perform();
+        if (repeatableQuestDic.TryGetValue(id, out RepeatableQuest repeatableQuest)) repeatableQuest.Perform();
+        if (achievementQuestDic.TryGetValue(id, out AchievementQuest achievementQuest)) achievementQuest.Perform();
     }
 }
